@@ -58,8 +58,8 @@ namespace ContosoChatAPI.Services
             var inputs = new Dictionary<string, dynamic>
             {
                 { "customer", customer },
-                { "context", context },
-                { "embedding", embedding },
+                { "documentation", context },
+                { "question", question },
                 { "chatHistory", chatHistory }
             };
             // load chat.json file as new dictionary<string, string>
