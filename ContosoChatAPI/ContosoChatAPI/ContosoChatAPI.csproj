@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Azure.Search.Documents" Version="11.6.0-beta.3" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.39.0" />
     <PackageReference Include="Prompty" Version="0.0.7-alpha" />
+=======
+    <PackageReference Include="Prompty" Version="0.0.6-alpha" />
+>>>>>>> 675001a (chat updates with static chat.json data)
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
