@@ -9,12 +9,23 @@
   <ItemGroup>
     <PackageReference Include="Azure.Search.Documents" Version="11.6.0-beta.3" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.39.0" />
-    <PackageReference Include="Prompty" Version="0.0.6-alpha" />
+    <PackageReference Include="Prompty" Version="0.0.7-alpha" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Evaluations\" />
+    <None Update="Evaluations\coherence.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Evaluations\fluency.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Evaluations\groundedness.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Evaluations\relevance.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

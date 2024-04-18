@@ -2,6 +2,7 @@
 using ContosoChatAPI.Data;
 using Newtonsoft.Json;
 using static ContosoChatAPI.Data.CustomerData;
+using ContosoChatAPI.Evaluations;
 
 
 namespace ContosoChatAPI.Services
@@ -72,18 +73,22 @@ namespace ContosoChatAPI.Services
 
             Console.WriteLine("Getting result...");
             prompty = await prompty.Execute("chat.prompty", prompty);
+            var result = prompty.ChatResponseMessage.Content;
 
-            // not implemented yet
-            //var score = new Dictionary<string, double>();
-            //score["groundedness"] = EvaluateGroundedness(question, context, result);
-            //score["coherence"] = EvaluateCoherence(question, context, result);
-            //score["relevance"] = EvaluateRelevance(question, context, result);
-            //score["fluency"] = EvaluateFluency(question, context, result);
+            // Create score dict with results
+            var score = new Dictionary<string, string>();
 
-            //Console.WriteLine($"Result: {result}");
-            //Console.WriteLine($"Score: {string.Join(", ", score)}");
+            score["groundedness"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/groundedness.prompty");
+            score["coherence"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/coherence.prompty");
+            score["relevance"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/relevance.prompty");
+            score["fluency"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/fluency.prompty");
 
-            return prompty.ChatResponseMessage.Content;
+            Console.WriteLine($"Result: {result}");
+            Console.WriteLine($"Score: {string.Join(", ", score)}");
+            // add score to result
+            result = JsonConvert.SerializeObject(new { result, score });
+
+            return result;
         }
     }
 }
