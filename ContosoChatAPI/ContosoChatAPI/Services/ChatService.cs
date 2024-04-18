@@ -2,7 +2,10 @@
 using ContosoChatAPI.Data;
 using Newtonsoft.Json;
 using static ContosoChatAPI.Data.CustomerData;
+<<<<<<< HEAD
 using ContosoChatAPI.Evaluations;
+=======
+>>>>>>> af1c39a (contoso chat logic added)
 
 
 namespace ContosoChatAPI.Services
@@ -59,8 +62,13 @@ namespace ContosoChatAPI.Services
             var inputs = new Dictionary<string, dynamic>
             {
                 { "customer", customer },
+<<<<<<< HEAD
                 { "documentation", context },
                 { "question", question },
+=======
+                { "context", context },
+                { "embedding", embedding },
+>>>>>>> af1c39a (contoso chat logic added)
                 { "chatHistory", chatHistory }
             };
             // load chat.json file as new dictionary<string, string>
@@ -73,6 +81,7 @@ namespace ContosoChatAPI.Services
 
             Console.WriteLine("Getting result...");
             prompty = await prompty.Execute("chat.prompty", prompty);
+<<<<<<< HEAD
             var result = prompty.ChatResponseMessage.Content;
 
             // Create score dict with results
@@ -89,6 +98,20 @@ namespace ContosoChatAPI.Services
             result = JsonConvert.SerializeObject(new { result, score });
 
             return result;
+=======
+
+            // not implemented yet
+            //var score = new Dictionary<string, double>();
+            //score["groundedness"] = EvaluateGroundedness(question, context, result);
+            //score["coherence"] = EvaluateCoherence(question, context, result);
+            //score["relevance"] = EvaluateRelevance(question, context, result);
+            //score["fluency"] = EvaluateFluency(question, context, result);
+
+            //Console.WriteLine($"Result: {result}");
+            //Console.WriteLine($"Score: {string.Join(", ", score)}");
+
+            return prompty.ChatResponseMessage.Content;
+>>>>>>> af1c39a (contoso chat logic added)
         }
     }
 }
