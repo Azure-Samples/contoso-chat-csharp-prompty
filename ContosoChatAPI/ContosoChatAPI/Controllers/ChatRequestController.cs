@@ -21,11 +21,11 @@ namespace ContosoChatAPI.Controllers
         }
 
 
-        [HttpGet(Name = "GetChatRequest")]
-        public string Get(string customerId, string question, string chatHistory)
+        [HttpPost(Name = "PostChatRequest")]
+        public string Post(string customerId, string question, List<string> chatHistory)
         {
             var chatService = new ChatService();
-            string result = chatService.GetResponseAsync(customerId, question, chatHistory.Split(',').ToList()).Result;
+            string result = chatService.GetResponseAsync(customerId, question, chatHistory.ToList()).Result;
             Console.WriteLine(result);
             return result;
         }
