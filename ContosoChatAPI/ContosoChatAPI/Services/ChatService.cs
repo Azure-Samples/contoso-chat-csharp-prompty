@@ -2,10 +2,7 @@
 using ContosoChatAPI.Data;
 using Newtonsoft.Json;
 using static ContosoChatAPI.Data.CustomerData;
-<<<<<<< HEAD
 using ContosoChatAPI.Evaluations;
-=======
->>>>>>> af1c39a (contoso chat logic added)
 
 
 namespace ContosoChatAPI.Services
@@ -63,12 +60,17 @@ namespace ContosoChatAPI.Services
             {
                 { "customer", customer },
 <<<<<<< HEAD
+<<<<<<< HEAD
                 { "documentation", context },
                 { "question", question },
 =======
                 { "context", context },
                 { "embedding", embedding },
 >>>>>>> af1c39a (contoso chat logic added)
+=======
+                { "documentation", context },
+                { "question", question },
+>>>>>>> cb92d26 (fix input mapping)
                 { "chatHistory", chatHistory }
             };
             // load chat.json file as new dictionary<string, string>
