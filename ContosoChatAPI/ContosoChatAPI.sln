@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoChatAPI", "ContosoChatAPI\ContosoChatAPI.csproj", "{0C951B95-1FCD-439E-94A7-ABC77888A159}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoChatAPI", "ContosoChatAPI\ContosoChatAPI.csproj", "{0C951B95-1FCD-439E-94A7-ABC77888A159}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28351113-BE22-4C78-BB29-C525270EBB15} = {28351113-BE22-4C78-BB29-C525270EBB15}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prompty.Core", "Prompty.Core\Prompty.Core.csproj", "{28351113-BE22-4C78-BB29-C525270EBB15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{0C951B95-1FCD-439E-94A7-ABC77888A159}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C951B95-1FCD-439E-94A7-ABC77888A159}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C951B95-1FCD-439E-94A7-ABC77888A159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28351113-BE22-4C78-BB29-C525270EBB15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28351113-BE22-4C78-BB29-C525270EBB15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28351113-BE22-4C78-BB29-C525270EBB15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28351113-BE22-4C78-BB29-C525270EBB15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

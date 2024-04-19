@@ -37,10 +37,11 @@ namespace ContosoChatAPI.Evaluations
             };
 
             var prompty = new Prompty.Core.Prompty();
+            prompty.Load(path, prompty);
             prompty.Inputs = inputs;
 
             Console.WriteLine("Getting result...");
-            prompty = await prompty.Execute(path, prompty);
+            prompty = await prompty.Execute(prompty);
             var result = prompty.ChatResponseMessage.Content;
 
             // Replace this with your actual coherence evaluation logic
