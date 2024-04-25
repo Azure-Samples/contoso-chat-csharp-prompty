@@ -7,7 +7,6 @@ param identityId string
 param containerAppsEnvironmentName string
 param containerRegistryName string
 param serviceName string = 'aca'
-param exists bool
 param openAiDeploymentName string
 param openAiEndpoint string
 param openAiApiVersion string
@@ -22,7 +21,6 @@ module app '../core/host/container-app-upsert.bicep' = {
     tags: union(tags, { 'azd-service-name': serviceName })
     identityName: identityName
     identityType: 'UserAssigned'
-    exists: exists
     containerAppsEnvironmentName: containerAppsEnvironmentName
     containerRegistryName: containerRegistryName
     env: [

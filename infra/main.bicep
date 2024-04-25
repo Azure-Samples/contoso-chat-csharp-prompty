@@ -9,15 +9,12 @@ param name string
 @description('Primary location for all resources')
 param location string
 
-param acaExists bool = false
-
 param openAiResourceName string = ''
 param openAiResourceGroupName string = ''
 param openAiResourceGroupLocation string = ''
 param openAiSkuName string = ''
 param openAiApiVersion string = ''
 param searchServiceName string = ''
-param searchLocation string = ''
 param cosmosAccountName string = ''
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
@@ -32,8 +29,6 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 resource openAiResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' existing = if (!empty(openAiResourceGroupName)) {
   name: !empty(openAiResourceGroupName) ? openAiResourceGroupName : resourceGroup.name
 }
-
-//TODO: 
 
 var prefix = '${name}-${resourceToken}'
 
@@ -70,6 +65,37 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
           name: 'Standard'
           capacity: 30
         }
+      }
+    ]
+  }
+}
+
+module search 'core/search/search-services.bicep' = {
+  name: 'search'
+  scope: resourceGroup
+  params: {
+    name: !empty(searchServiceName) ? searchServiceName : '${prefix}-search-contoso'
+    location: location
+    semanticSearch: 'free'
+  }
+}
+
+module cosmos 'core/database/cosmos/sql/cosmos-sql-db.bicep' = {
+  name: 'cosmos'
+  scope: resourceGroup
+  params: {
+    accountName: !empty(cosmosAccountName) ? cosmosAccountName : 'cosmos-contoso-${resourceToken}'
+    databaseName: 'contoso-outdoor'
+    location: location
+    tags: union(tags, {
+      defaultExperience: 'Core (SQL)'
+      'hidden-cosmos-mmspecial': ''
+    })
+    containers: [
+      {
+        name: 'customers'
+        id: 'customers'
+        partitionKey: '/id'
       }
     ]
   }
@@ -115,38 +141,6 @@ module aca 'app/aca.bicep' = {
     openAiApiVersion: openAiApiVersion
     aiSearchEndpoint: search.outputs.endpoint
     cosmosEndpoint: cosmos.outputs.endpoint
-    exists: acaExists
-  }
-}
-
-module search 'core/search/search-services.bicep' = {
-  name: 'search'
-  scope: resourceGroup
-  params: {
-    name: !empty(searchServiceName) ? searchServiceName : '${prefix}-search-contoso'
-    location: searchLocation
-    semanticSearch: 'free'
-  }
-}
-
-module cosmos 'core/database/cosmos/sql/cosmos-sql-db.bicep' = {
-  name: 'cosmos'
-  scope: resourceGroup
-  params: {
-    accountName: !empty(cosmosAccountName) ? cosmosAccountName : 'cosmos-contoso-${resourceToken}'
-    databaseName: 'contoso-outdoor'
-    location: location
-    tags: union(tags, {
-      defaultExperience: 'Core (SQL)'
-      'hidden-cosmos-mmspecial': ''
-    })
-    containers: [
-      {
-        name: 'customers'
-        id: 'customers'
-        partitionKey: '/id'
-      }
-    ]
   }
 }
 

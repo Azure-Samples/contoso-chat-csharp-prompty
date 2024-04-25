@@ -31,6 +31,8 @@ namespace ContosoChatAPI
             app.MapControllers();
 
             app.Run();
+
+            //TODO: Add code to populate Cosmos (asynchrhonous)
         }
     }
 }
