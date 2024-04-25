@@ -9,12 +9,6 @@ param name string
 @description('Primary location for all resources')
 param location string
 
-@description('Id of the user or app to assign application roles')
-param principalId string = ''
-
-@description('Flag to decide where to create OpenAI role for current user')
-param createRoleForUser bool = true
-
 param acaExists bool = false
 
 param openAiResourceName string = ''
@@ -25,7 +19,6 @@ param openAiApiVersion string = ''
 param searchServiceName string = ''
 param searchLocation string = ''
 param cosmosAccountName string = ''
-param keyVaultName string = ''
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var tags = { 'azd-env-name': name }
@@ -40,7 +33,19 @@ resource openAiResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' exi
   name: !empty(openAiResourceGroupName) ? openAiResourceGroupName : resourceGroup.name
 }
 
+//TODO: 
+
 var prefix = '${name}-${resourceToken}'
+
+module managedIdentity 'core/security/managed-identity.bicep' = {
+  name: 'managed-identity'
+  scope: resourceGroup
+  params: {
+    name: 'id-${resourceToken}'
+    location: location
+    tags: tags
+  }
+}
 
 var openAiDeploymentName = 'chatgpt'
 module openAi 'core/ai/cognitiveservices.bicep' = {
@@ -94,7 +99,6 @@ module containerApps 'core/host/container-apps.bicep' = {
   }
 }
 
-// Container app frontend
 module aca 'app/aca.bicep' = {
   name: 'aca'
   scope: resourceGroup
@@ -102,12 +106,15 @@ module aca 'app/aca.bicep' = {
     name: replace('${take(prefix,19)}-ca', '--', '-')
     location: location
     tags: tags
-    identityName: '${prefix}-id-aca'
+    identityName: managedIdentity.outputs.managedIdentityName
+    identityId: managedIdentity.outputs.managedIdentityClientId
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
     openAiDeploymentName: openAiDeploymentName
     openAiEndpoint: openAi.outputs.endpoint
     openAiApiVersion: openAiApiVersion
+    aiSearchEndpoint: search.outputs.endpoint
+    cosmosEndpoint: cosmos.outputs.endpoint
     exists: acaExists
   }
 }
@@ -122,26 +129,6 @@ module search 'core/search/search-services.bicep' = {
   }
 }
 
-module keyvault 'core/security/keyvault.bicep' = {
-  name: !empty(keyVaultName) ? keyVaultName : 'kvcontoso${resourceToken}'
-  scope: resourceGroup
-  params: {
-    name: !empty(keyVaultName) ? keyVaultName : 'kvcontoso${resourceToken}'
-    location: location
-    tags: tags
-    principalId: principalId
-  }
-}
-
-module keyVaultAccess 'core/security/keyvault-access.bicep' = {
-  name: 'keyvault-access'
-  scope: resourceGroup
-  params: {
-    keyVaultName: keyvault.name
-    principalId: aca.outputs.SERVICE_ACA_IDENTITY_PRINCIPAL_ID
-  }
-}
-
 module cosmos 'core/database/cosmos/sql/cosmos-sql-db.bicep' = {
   name: 'cosmos'
   scope: resourceGroup
@@ -153,7 +140,6 @@ module cosmos 'core/database/cosmos/sql/cosmos-sql-db.bicep' = {
       defaultExperience: 'Core (SQL)'
       'hidden-cosmos-mmspecial': ''
     })
-    keyVaultName: keyvault.outputs.name
     containers: [
       {
         name: 'customers'
@@ -164,29 +150,39 @@ module cosmos 'core/database/cosmos/sql/cosmos-sql-db.bicep' = {
   }
 }
 
-
-module openAiRoleUser 'core/security/role.bicep' = if (createRoleForUser) {
+module openAiRole 'core/security/role.bicep' = {
   scope: openAiResourceGroup
-  name: 'openai-role-user'
+  name: 'openai-role'
   params: {
-    principalId: principalId
-    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
-    principalType: 'User'
-  }
-}
-
-
-module openAiRoleBackend 'core/security/role.bicep' = {
-  scope: openAiResourceGroup
-  name: 'openai-role-backend'
-  params: {
-    principalId: aca.outputs.SERVICE_ACA_IDENTITY_PRINCIPAL_ID
-    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+    principalId: managedIdentity.outputs.managedIdentityClientId
+    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd' //OpenAI Cognitive User
     principalType: 'ServicePrincipal'
   }
 }
 
+module aiSearchRole 'core/security/role.bicep' = {
+  scope: openAiResourceGroup
+  name: 'ai-search-role'
+  params: {
+    principalId: managedIdentity.outputs.managedIdentityClientId
+    roleDefinitionId: '1407120a-92aa-4202-b7e9-c0e197c71c8f' //Search Index Data Reader
+    principalType: 'ServicePrincipal'
+  }
+}
+
+module cosmosRole 'core/security/role.bicep' = {
+  scope: openAiResourceGroup
+  name: 'cosmos-role'
+  params: {
+    principalId: managedIdentity.outputs.managedIdentityClientId
+    roleDefinitionId: 'fbdf93bf-df7d-467e-a4d2-9458aa1360c8' //Cosmos DB Account Reader Role
+    principalType: 'ServicePrincipal'
+  }
+}
+
+
 output AZURE_LOCATION string = location
+output RESOURCE_GROUP_NAME string =resourceGroup.name
 
 output AZURE_OPENAI_CHATGPT_DEPLOYMENT string = openAiDeploymentName
 output AZURE_OPENAI_API_VERSION string = openAiApiVersion
@@ -196,7 +192,6 @@ output AZURE_OPENAI_RESOURCE_GROUP string = openAiResourceGroup.name
 output AZURE_OPENAI_SKU_NAME string = openAi.outputs.skuName
 output AZURE_OPENAI_RESOURCE_GROUP_LOCATION string = openAiResourceGroup.location
 
-output SERVICE_ACA_IDENTITY_PRINCIPAL_ID string = aca.outputs.SERVICE_ACA_IDENTITY_PRINCIPAL_ID
 output SERVICE_ACA_NAME string = aca.outputs.SERVICE_ACA_NAME
 output SERVICE_ACA_URI string = aca.outputs.SERVICE_ACA_URI
 output SERVICE_ACA_IMAGE_NAME string = aca.outputs.SERVICE_ACA_IMAGE_NAME

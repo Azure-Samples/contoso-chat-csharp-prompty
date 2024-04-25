@@ -3,6 +3,7 @@ param location string = resourceGroup().location
 param tags object = {}
 
 param identityName string
+param identityId string
 param containerAppsEnvironmentName string
 param containerRegistryName string
 param serviceName string = 'aca'
@@ -10,12 +11,8 @@ param exists bool
 param openAiDeploymentName string
 param openAiEndpoint string
 param openAiApiVersion string
-
-resource acaIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: identityName
-  location: location
-}
-
+param cosmosEndpoint string
+param aiSearchEndpoint string
 
 module app '../core/host/container-app-upsert.bicep' = {
   name: '${serviceName}-container-app-module'
@@ -23,13 +20,14 @@ module app '../core/host/container-app-upsert.bicep' = {
     name: name
     location: location
     tags: union(tags, { 'azd-service-name': serviceName })
-    identityName: acaIdentity.name
+    identityName: identityName
+    identityType: 'UserAssigned'
     exists: exists
     containerAppsEnvironmentName: containerAppsEnvironmentName
     containerRegistryName: containerRegistryName
     env: [
       {
-        name: 'AZURE_OPENAI_CHATGPT_DEPLOYMENT'
+        name: 'AZURE_OPENAI_DEPLOYMENT'
         value: openAiDeploymentName
       }
       {
@@ -41,19 +39,22 @@ module app '../core/host/container-app-upsert.bicep' = {
         value: openAiApiVersion
       }
       {
-        name: 'RUNNING_IN_PRODUCTION'
-        value: 'true'
+        name: 'AZURE_USERASSIGNED_ID'
+        value: identityId
       }
       {
-        name: 'AZURE_OPENAI_CLIENT_ID'
-        value: acaIdentity.properties.clientId
+        name: 'COSMOS_ENDPOINT'
+        value: cosmosEndpoint
+      }
+      {
+        name: 'AISEARCH_ENDPOINT'
+        value: aiSearchEndpoint
       }
     ]
     targetPort: 50505
   }
 }
 
-output SERVICE_ACA_IDENTITY_PRINCIPAL_ID string = acaIdentity.properties.principalId
 output SERVICE_ACA_NAME string = app.outputs.name
 output SERVICE_ACA_URI string = app.outputs.uri
 output SERVICE_ACA_IMAGE_NAME string = app.outputs.imageName
