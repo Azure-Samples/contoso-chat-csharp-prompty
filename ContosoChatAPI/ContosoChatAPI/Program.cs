@@ -3,6 +3,8 @@ using Azure.Identity;
 using System.Configuration;
 using ContosoChatAPI.Data;
 using Azure.Search.Documents;
+using ContosoChatAPI.Services;
+using ContosoChatAPI.Evaluations;
 
 namespace ContosoChatAPI
 {
@@ -26,6 +28,8 @@ namespace ContosoChatAPI
             builder.Services.AddScoped<CustomerData>();
             builder.Services.AddScoped<EmbeddingData>();
             builder.Services.AddScoped<AISearchData>();
+            builder.Services.AddScoped<Evaluation>();
+            builder.Services.AddScoped<ChatService>();
 
             var app = builder.Build();
 
