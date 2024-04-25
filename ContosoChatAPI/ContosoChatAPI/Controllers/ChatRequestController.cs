@@ -22,10 +22,10 @@ namespace ContosoChatAPI.Controllers
 
 
     [HttpPost(Name = "PostChatRequest")]
-    public string Post(string customerId, string question, List<string> chatHistory)
+    public async Task<string> Post(string customerId, string question, List<string> chatHistory)
     {
       var chatService = new ChatService();
-      string result = chatService.GetResponseAsync(customerId, question, chatHistory.ToList()).Result;
+      string result = await chatService.GetResponseAsync(customerId, question, chatHistory.ToList());
       Console.WriteLine(result);
       return result;
     }

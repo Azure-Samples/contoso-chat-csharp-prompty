@@ -3,12 +3,14 @@ using Newtonsoft.Json;
 using static ContosoChatAPI.Data.CustomerData;
 using ContosoChatAPI.Evaluations;
 using Prompty.Core;
+using Microsoft.Azure.Cosmos;
 
 
 namespace ContosoChatAPI.Services
 {
     public class ChatService
     {
+        private readonly CosmosClient _cosmosClient;
         private readonly IConfiguration _consmos;
         private readonly string _cosmosEndpoint;
         private readonly string _cosmosKey;
@@ -21,8 +23,10 @@ namespace ContosoChatAPI.Services
         private readonly string _aiSearchEndpoint;
         private readonly string _aiSearchKey;
 
-        public ChatService()
+        public ChatService(CosmosClient cosmosClient)
         {
+            _cosmosClient = cosmosClient;
+
             // get endpoint and key from appsettings.json
             var config = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -47,8 +51,10 @@ namespace ContosoChatAPI.Services
             Console.WriteLine($"Inputs: CustomerId = {customerId}, Question = {question}");
 
             // get customer data
-            var customerData = new CustomerData(_cosmosEndpoint, _cosmosKey);
-            var customer = await customerData.GetCustomerAsync(customerId);
+            //var customerData = new CustomerData(_cosmosEndpoint, _cosmosKey);
+            //var customerData = new CustomerData();
+
+            var customer = await _cosmosClient.GetCustomerAsync(customerId);
             // get question embedding
 
             var embeddingData = new EmbeddingData(_oaiEndpoint, _oaiKey);

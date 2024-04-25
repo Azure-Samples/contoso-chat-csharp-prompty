@@ -6,6 +6,7 @@ using Azure.Core;
 using System.Threading.Tasks;
 using Azure;
 using Azure.AI.OpenAI;
+using Azure.Identity;
 
 
 namespace ContosoChatAPI.Data
@@ -15,12 +16,14 @@ namespace ContosoChatAPI.Data
         private readonly AzureKeyCredential _credentials;
         private readonly SearchClient _searchClient;
 
+
+
         public AISearchData(string searchEndpoint, string searchKey, string indexName)
         {
             _searchClient = new SearchClient(
                                 new Uri(searchEndpoint),
                                 indexName,
-                                new AzureKeyCredential(searchKey));
+                                new DefaultAzureCredential());
 
         }
         public async Task<List<Dictionary<string, string>>> RetrieveDocumentationAsync(
@@ -50,7 +53,7 @@ namespace ContosoChatAPI.Data
             var results = await _searchClient.SearchAsync<SearchDocument>(question, searchOptions);
 
             var docs = new List<Dictionary<string, string>>();
-            foreach (var doc in results.Value.GetResults())
+            await foreach (var doc in results.Value.GetResultsAsync())
             {
                 var docInfo = new Dictionary<string, string>
                 {

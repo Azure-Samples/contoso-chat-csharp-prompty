@@ -1,3 +1,7 @@
+using Microsoft.Azure.Cosmos;
+using Azure.Identity;
+using System.Configuration;
+using ContosoChatAPI.Data;
 
 namespace ContosoChatAPI
 {
@@ -13,6 +17,10 @@ namespace ContosoChatAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSingleton<CosmosClient>(serviceProvider => {
+                return new CosmosClient(builder.Configuration["xxx"], new DefaultAzureCredential());
+            });
+            builder.Services.AddScoped<CustomerData>();
 
             var app = builder.Build();
 
@@ -26,7 +34,6 @@ namespace ContosoChatAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

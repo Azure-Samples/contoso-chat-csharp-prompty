@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using System.Collections.Concurrent;
+using Azure.Identity;
 
 namespace ContosoChatAPI.Data
 {
@@ -9,9 +10,9 @@ namespace ContosoChatAPI.Data
         private readonly string _databaseName = "contoso-outdoor";
         private readonly string _containerName = "customers";
 
-        public CustomerData(string cosmosEndpoint, string cosmosKey)
+        public CustomerData(CosmosClient cosmosClient)
         {
-            _cosmosClient = new CosmosClient(cosmosEndpoint, cosmosKey);
+            _cosmosClient = cosmosClient;
         }
 
         public async Task<Dictionary<string, object>> GetCustomerAsync(string customerId)
