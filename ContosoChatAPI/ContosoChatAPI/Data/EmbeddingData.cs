@@ -1,5 +1,6 @@
 ﻿using Azure.AI.OpenAI;
 using Azure;
+using Azure.Identity;
 
 namespace ContosoChatAPI.Data
 {
@@ -7,15 +8,17 @@ namespace ContosoChatAPI.Data
     {
 
         private readonly AzureKeyCredential _credentials;
-        private readonly OpenAIClient _openAIClient; 
+        private readonly OpenAIClient _openAIClient;
+        private readonly ILogger<EmbeddingData> logger;
 
-        public EmbeddingData(string oaiEndpoint, string oaiKey)
+        public EmbeddingData(IConfiguration config, ILogger<EmbeddingData> logger)
         {
-            _credentials = new(oaiKey);
-            _openAIClient = new(new Uri(oaiEndpoint), _credentials);
+            var promptyConfig = config.GetSection("prompty");
 
+            _openAIClient = new(new Uri(promptyConfig["azure_endpoint"]), new DefaultAzureCredential());
+            this.logger = logger;
         }
-        public Embeddings GetEmbedding(string question)
+        public async Task<Embeddings> GetEmbedding(string question)
         {
             try
             {
@@ -25,13 +28,13 @@ namespace ContosoChatAPI.Data
                     Input = { question },
                 };
 
-                var embeddings = _openAIClient.GetEmbeddings(embeddingOptions);
+                var embeddings = await _openAIClient.GetEmbeddingsAsync(embeddingOptions);
                 return embeddings.Value;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
-                return null;
+                logger.LogError($"Exception: {ex.Message}");
+                throw;
             }
         }
     }

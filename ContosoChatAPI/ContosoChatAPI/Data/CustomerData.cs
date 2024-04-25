@@ -7,12 +7,14 @@ namespace ContosoChatAPI.Data
     public class CustomerData
     {
         private readonly CosmosClient _cosmosClient;
+        private readonly ILogger<CustomerData> logger;
         private readonly string _databaseName = "contoso-outdoor";
         private readonly string _containerName = "customers";
 
-        public CustomerData(CosmosClient cosmosClient)
+        public CustomerData(CosmosClient cosmosClient, ILogger<CustomerData> logger)
         {
             _cosmosClient = cosmosClient;
+            this.logger = logger;
         }
 
         public async Task<Dictionary<string, object>> GetCustomerAsync(string customerId)
@@ -35,8 +37,8 @@ namespace ContosoChatAPI.Data
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Console.WriteLine($"Customer with ID {customerId} not found.");
-                return null;
+                logger.LogError($"Customer with ID {customerId} not found.");
+                throw;
             }
         }
 

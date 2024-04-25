@@ -3,6 +3,7 @@ using Azure;
 using System.Text.Json;
 using Prompty.Core.Types;
 using System.Collections;
+using Azure.Identity;
 
 namespace Prompty.Core.Executors
 {
@@ -19,10 +20,14 @@ namespace Prompty.Core.Executors
 
         public AzureOpenAIExecutor(Prompty prompty)
         {
-            client = new OpenAIClient(
-                endpoint: new Uri(prompty.Model.AzureEndpoint),
-                keyCredential: new AzureKeyCredential(prompty.Model.ApiKey)
-            );
+            if (string.IsNullOrEmpty(prompty.Model.ApiKey))
+            {
+                client = new OpenAIClient(endpoint: new Uri(prompty.Model.AzureEndpoint), new DefaultAzureCredential());
+            }
+            else
+            {
+                client = new OpenAIClient(endpoint: new Uri(prompty.Model.AzureEndpoint), keyCredential: new AzureKeyCredential(prompty.Model.ApiKey));
+            }
 
             api = prompty.modelApiType.ToString();
             parameters = prompty.Parameters;

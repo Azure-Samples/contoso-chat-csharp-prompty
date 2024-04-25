@@ -10,58 +10,28 @@ namespace ContosoChatAPI.Services
 {
     public class ChatService
     {
-        private readonly CosmosClient _cosmosClient;
-        private readonly IConfiguration _consmos;
-        private readonly string _cosmosEndpoint;
-        private readonly string _cosmosKey;
+        private readonly CustomerData _customerData;
+        private readonly AISearchData _aiSearch;
+        private readonly EmbeddingData _embeddingData;
+        private readonly Evaluation _evaluation;
+        private readonly ILogger<ChatService> logger;
 
-        private readonly IConfiguration _prompty;
-        private readonly string _oaiEndpoint;
-        private readonly string _oaiKey;
-
-        private readonly IConfiguration _aiSearch;
-        private readonly string _aiSearchEndpoint;
-        private readonly string _aiSearchKey;
-
-        public ChatService(CosmosClient cosmosClient)
+        public ChatService(CustomerData customerData, AISearchData aiSearch, EmbeddingData embeddingData, Evaluation evaluation, ILogger<ChatService> logger)
         {
-            _cosmosClient = cosmosClient;
-
-            // get endpoint and key from appsettings.json
-            var config = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json").Build();
-
-            _consmos = config.GetSection("CosmosDB");
-            _prompty = config.GetSection("prompty");
-            _aiSearch = config.GetSection("AzureAISearch");
-
-            _cosmosEndpoint = _consmos["Endpoint"];
-            _cosmosKey = _consmos["Key"];
-
-            _oaiEndpoint = _prompty["azure_endpoint"];
-            _oaiKey = _prompty["api_key"];
-
-            _aiSearchEndpoint = _aiSearch["Endpoint"];
-            _aiSearchKey = _aiSearch["Key"];
+            _customerData = customerData;
+            _aiSearch = aiSearch;
+            _embeddingData = embeddingData;
+            _evaluation = evaluation;
+            this.logger = logger;
         }
+
         public async Task<string> GetResponseAsync(string customerId, string question, List<string> chatHistory)
         {
+            logger.LogInformation($"Inputs: CustomerId = {customerId}, Question = {question}");
 
-            Console.WriteLine($"Inputs: CustomerId = {customerId}, Question = {question}");
-
-            // get customer data
-            //var customerData = new CustomerData(_cosmosEndpoint, _cosmosKey);
-            //var customerData = new CustomerData();
-
-            var customer = await _cosmosClient.GetCustomerAsync(customerId);
-            // get question embedding
-
-            var embeddingData = new EmbeddingData(_oaiEndpoint, _oaiKey);
-            var embedding = embeddingData.GetEmbedding(question);
-
-            var aiSearch = new AISearchData(_aiSearchEndpoint, _aiSearchKey, "contoso-products");
-            var context = await aiSearch.RetrieveDocumentationAsync(question, embedding);
+            var customer = await _customerData.GetCustomerAsync(customerId);
+            var embedding = await _embeddingData.GetEmbedding(question);
+            var context = await _aiSearch.RetrieveDocumentationAsync(question, embedding);
 
             var inputs = new Dictionary<string, dynamic>
             {
@@ -74,24 +44,26 @@ namespace ContosoChatAPI.Services
             var prompty = new Prompty.Core.Prompty();
             // load prompty file
             prompty.Load("chat.prompty", prompty);
-            // set overides
 
+            // set overides
             prompty.Inputs = inputs;
 
-            Console.WriteLine("Getting result...");
+            logger.LogInformation("Getting result...");
+
             prompty = await prompty.Execute(prompty);
             var result = prompty.ChatResponseMessage.Content;
 
             // Create score dict with results
-            var score = new Dictionary<string, string>();
+            var score = new Dictionary<string, string>
+            {
+                ["groundedness"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/groundedness.prompty"),
+                ["coherence"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/coherence.prompty"),
+                ["relevance"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/relevance.prompty"),
+                ["fluency"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/fluency.prompty")
+            };
 
-            score["groundedness"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/groundedness.prompty");
-            score["coherence"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/coherence.prompty");
-            score["relevance"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/relevance.prompty");
-            score["fluency"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/fluency.prompty");
-
-            Console.WriteLine($"Result: {result}");
-            Console.WriteLine($"Score: {string.Join(", ", score)}");
+            logger.LogInformation($"Result: {result}");
+            logger.LogInformation($"Score: {string.Join(", ", score)}");
             // add score to result
             result = JsonConvert.SerializeObject(new { result, score });
 

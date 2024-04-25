@@ -15,14 +15,17 @@ namespace ContosoChatAPI.Data
     {
         private readonly AzureKeyCredential _credentials;
         private readonly SearchClient _searchClient;
+        readonly string _indexName = "contoso-products";
 
 
 
-        public AISearchData(string searchEndpoint, string searchKey, string indexName)
+        public AISearchData(IConfiguration config)
         {
+            var searchConfig = config.GetSection("AzureAISearch");
+
             _searchClient = new SearchClient(
-                                new Uri(searchEndpoint),
-                                indexName,
+                                new Uri(config["Endpoint"]),
+                                _indexName,
                                 new DefaultAzureCredential());
 
         }

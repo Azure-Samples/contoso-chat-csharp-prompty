@@ -2,6 +2,7 @@ using Microsoft.Azure.Cosmos;
 using Azure.Identity;
 using System.Configuration;
 using ContosoChatAPI.Data;
+using Azure.Search.Documents;
 
 namespace ContosoChatAPI
 {
@@ -17,10 +18,14 @@ namespace ContosoChatAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddSingleton<CosmosClient>(serviceProvider => {
-                return new CosmosClient(builder.Configuration["xxx"], new DefaultAzureCredential());
+                return new CosmosClient(builder.Configuration["CosmosDb:Endpoint"], new DefaultAzureCredential());
             });
+
             builder.Services.AddScoped<CustomerData>();
+            builder.Services.AddScoped<EmbeddingData>();
+            builder.Services.AddScoped<AISearchData>();
 
             var app = builder.Build();
 

@@ -3,10 +3,17 @@ using Prompty.Core;
 
 namespace ContosoChatAPI.Evaluations
 {
-    public static class Evaluation
+    public class Evaluation
     {
+       private readonly ILogger<Evaluation> logger;
+
+        public Evaluation(ILogger<Evaluation> logger)
+        {
+            this.logger = logger;
+        }
+
         // Run a batch coherence evaluation
-        public static async Task<List<string>> Batch(string file, string path)
+        public async Task<List<string>> Batch(string file, string path)
         {
             if(!File.Exists(file))
             {
@@ -27,7 +34,7 @@ namespace ContosoChatAPI.Evaluations
         }
 
         // Run a single coherence evaluation
-        public static async Task<string> Evaluate(string question, object context, string answer, string path)
+        public async Task<string> Evaluate(string question, object context, string answer, string path)
         {
             var inputs = new Dictionary<string, dynamic>
             {
@@ -40,7 +47,7 @@ namespace ContosoChatAPI.Evaluations
             prompty.Load(path, prompty);
             prompty.Inputs = inputs;
 
-            Console.WriteLine("Getting result...");
+            logger.LogInformation("Getting result...");
             prompty = await prompty.Execute(prompty);
             var result = prompty.ChatResponseMessage.Content;
 
