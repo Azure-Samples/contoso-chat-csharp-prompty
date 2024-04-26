@@ -7,7 +7,7 @@ namespace Prompty.Core
 
     public static class Helpers
     {
-        // This is to load the appsettings.json file config 
+        // This is to load the appsettings.json file config
         // These are the base configuration settings for the prompty file
         // These can be overriden by the prompty file, or the execute method
         public static Prompty GetPromptyModelConfigFromSettings(Prompty prompty)
@@ -17,7 +17,9 @@ namespace Prompty.Core
             // Get the connection string from appsettings.json
             var config = new ConfigurationBuilder()
                             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                            .AddJsonFile("appsettings.json").Build();
+                            .AddJsonFile("appsettings.json")
+                            .AddEnvironmentVariables()
+                            .Build();
 
             var section = config.GetSection("Prompty");
             // get variables from section and assign to promptymodelconfig

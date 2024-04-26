@@ -14,6 +14,7 @@ param openAiResourceGroupName string = ''
 param openAiResourceGroupLocation string = ''
 param openAiSkuName string = ''
 param openAiApiVersion string = ''
+param openAiType string = 'azure'
 param searchServiceName string = ''
 param cosmosAccountName string = ''
 
@@ -138,6 +139,7 @@ module aca 'app/aca.bicep' = {
     containerRegistryName: containerApps.outputs.registryName
     openAiDeploymentName: openAiDeploymentName
     openAiEndpoint: openAi.outputs.endpoint
+    openAiType: openAiType
     openAiApiVersion: openAiApiVersion
     aiSearchEndpoint: search.outputs.endpoint
     cosmosEndpoint: cosmos.outputs.endpoint

@@ -24,7 +24,7 @@ namespace ContosoChatAPI.Data
             var searchConfig = config.GetSection("AzureAISearch");
 
             _searchClient = new SearchClient(
-                                new Uri(config["Endpoint"]),
+                                new Uri(config["AzureAISearch:Endpoint"]),
                                 _indexName,
                                 new DefaultAzureCredential());
 

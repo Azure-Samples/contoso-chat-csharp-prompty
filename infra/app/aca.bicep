@@ -10,6 +10,7 @@ param serviceName string = 'aca'
 param openAiDeploymentName string
 param openAiEndpoint string
 param openAiApiVersion string
+param openAiType string
 param cosmosEndpoint string
 param aiSearchEndpoint string
 
@@ -41,13 +42,30 @@ module app '../core/host/container-app-upsert.bicep' = {
         value: identityId
       }
       {
-        name: 'COSMOS_ENDPOINT'
+        name: 'COSMOSDB__ENDPOINT'
         value: cosmosEndpoint
       }
       {
-        name: 'AISEARCH_ENDPOINT'
+        name: 'AZUREAISEARCH__ENDPOINT'
         value: aiSearchEndpoint
       }
+      {
+        name: 'PROMPTY__TYPE'
+        value: openAiType
+      }
+      {
+        name: 'PROMPTY__API_VERSION'
+        value: openAiApiVersion
+      }
+      {
+        name: 'PROMPTY__AZURE_ENDPOINT'
+        value: openAiEndpoint
+      }
+      {
+        name: 'PROMPTY__AZURE_DEPLOYMENT'
+        value: openAiDeploymentName
+      }
+
     ]
     targetPort: 50505
   }
