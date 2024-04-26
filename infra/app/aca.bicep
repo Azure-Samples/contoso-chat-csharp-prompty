@@ -63,11 +63,11 @@ module app '../core/host/container-app-upsert.bicep' = {
         value: openAiApiVersion
       }
       {
-        name: 'OPENAI__AZURE_ENDPOINT'
+        name: 'OPENAI__ENDPOINT'
         value: openAiEndpoint
       }
       {
-        name: 'OPENAI__AZURE_DEPLOYMENT'
+        name: 'OPENAI__DEPLOYMENT'
         value: openAiDeploymentName
       }
       {
