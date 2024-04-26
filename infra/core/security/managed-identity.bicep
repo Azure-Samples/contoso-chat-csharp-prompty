@@ -23,3 +23,4 @@ resource cognitiveServicesUserRoleAssignment 'Microsoft.Authorization/roleAssign
 
 output managedIdentityName string = managedIdentity.name
 output managedIdentityClientId string = managedIdentity.properties.clientId
+output managedIdentityPrincipalId string = managedIdentity.properties.principalId

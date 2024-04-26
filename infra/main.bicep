@@ -206,7 +206,7 @@ module cosmosAccountRole 'core/security/role-cosmos.bicep' = {
   scope: openAiResourceGroup
   name: 'cosmos-account-role'
   params: {
-    principalId: managedIdentity.outputs.managedIdentityClientId
+    principalId: managedIdentity.outputs.managedIdentityPrincipalId
     databaseAccountId: cosmos.outputs.accountId
     databaseAccountName: cosmos.outputs.accountName
   }
