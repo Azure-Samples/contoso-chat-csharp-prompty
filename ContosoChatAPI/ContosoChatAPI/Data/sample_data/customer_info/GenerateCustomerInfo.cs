@@ -35,10 +35,12 @@ namespace ContosoChatAPI.Data
             {
                 var result = await iterator.ReadNextAsync();
                 numDocs = result.FirstOrDefault();
-            }
+            }     
 
             if (numDocs == 0)
             {
+                _logger.LogInformation($"Creating CosmosDB container {_containerName} in database {_databaseName}...");
+
                 var jsonFiles = Directory.GetFiles("./Data/sample_data/customer_info", "*.json");
                 foreach (string file in jsonFiles)
                 {
@@ -49,6 +51,10 @@ namespace ContosoChatAPI.Data
 
                     _logger.LogInformation($"Upserted item with id {customer["id"]}");
                 }
+            }
+            else
+            {
+                _logger.LogInformation("CosmosDB container already populated, nothing to do.");
             }
         }
 

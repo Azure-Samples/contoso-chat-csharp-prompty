@@ -32,11 +32,13 @@ namespace ContosoChatAPI.Data
         {
             try
             {
+                _logger.LogInformation("Veryfying if AI Search index exists...");
                 var indexResponse = await _searchIndexClient.GetIndexAsync(_indexName);
 
                 if (indexResponse.Value.Name == _indexName)
                 {
                     //Index already exists, nothing to do
+                    _logger.LogInformation("AI Search index already exists, nothing to do.");
                     return;
                 }
             }
@@ -91,36 +93,38 @@ namespace ContosoChatAPI.Data
                 }
             };
 
-            await _searchIndexClient.CreateIndexAsync(index);
-
-            // Index the documents
-            // Load products from CSV file
-            var products = File.ReadAllLines("./Data/sample_data/product_info/products.csv").Select(line => line.Split(',')).Select(values => new
+            try
             {
-                id = values[0],
-                name = values[1],
-                description = values[2]
-            }).ToList();
+                await _searchIndexClient.CreateIndexAsync(index);
 
-            // Generate documents
-            List<Dictionary<string, object>> documents = new List<Dictionary<string, object>>();
-            foreach (var product in products)
-            {
-                var content = product.description;
-                var id = product.id;
-                var title = product.name;
-                var url = $"/products/{title.ToLower().Replace(' ', '-')}";
-
-
-                EmbeddingsOptions embeddingOptions = new()
+                // Index the documents
+                // Load products from CSV file
+                var products = File.ReadAllLines("./Data/sample_data/product_info/products.csv").Select(line => line.Split(',')).Select(values => new
                 {
-                    DeploymentName = _config["OpenAi:embedding_deployment"],
-                    Input = { content },
-                };
+                    id = values[0],
+                    name = values[1],
+                    description = values[2]
+                }).ToList();
 
-                var returnValue = await _openAIClient.GetEmbeddingsAsync(embeddingOptions);
-                var embedding = returnValue.Value.Data[0].Embedding.ToArray();
-                var document = new Dictionary<string, object>
+                // Generate documents
+                List<Dictionary<string, object>> documents = new List<Dictionary<string, object>>();
+                foreach (var product in products)
+                {
+                    var content = product.description;
+                    var id = product.id;
+                    var title = product.name;
+                    var url = $"/products/{title.ToLower().Replace(' ', '-')}";
+
+
+                    EmbeddingsOptions embeddingOptions = new()
+                    {
+                        DeploymentName = _config["OpenAi:embedding_deployment"],
+                        Input = { content },
+                    };
+
+                    var returnValue = await _openAIClient.GetEmbeddingsAsync(embeddingOptions);
+                    var embedding = returnValue.Value.Data[0].Embedding.ToArray();
+                    var document = new Dictionary<string, object>
                 {
                     { "id", id },
                     { "content", content },
@@ -129,13 +133,18 @@ namespace ContosoChatAPI.Data
                     { "url", url },
                     { "contentVector", embedding }
                 };
-                documents.Add(document);
-            }
+                    documents.Add(document);
+                }
 
-            // Index the documents
-            List<IndexDocumentsAction<Dictionary<string, object>>> actions = documents.Select(doc => IndexDocumentsAction.Upload(doc)).ToList();
-            var batch = IndexDocumentsBatch.Create(actions.ToArray());
-            await _searchClient.IndexDocumentsAsync(batch);
+                // Index the documents
+                List<IndexDocumentsAction<Dictionary<string, object>>> actions = documents.Select(doc => IndexDocumentsAction.Upload(doc)).ToList();
+                var batch = IndexDocumentsBatch.Create(actions.ToArray());
+                await _searchClient.IndexDocumentsAsync(batch);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
     }
 }
