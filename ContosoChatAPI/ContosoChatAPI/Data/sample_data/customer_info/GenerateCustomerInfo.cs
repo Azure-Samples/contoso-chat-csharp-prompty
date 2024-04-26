@@ -61,7 +61,7 @@ namespace ContosoChatAPI.Data
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError("Error in Cosmos: " + ex.Message);
             }
         }
 
