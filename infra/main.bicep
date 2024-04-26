@@ -44,6 +44,7 @@ module managedIdentity 'core/security/managed-identity.bicep' = {
 }
 
 var openAiDeploymentName = 'chatgpt'
+var openAiEmbeddingsDeploymentName = 'text-embedding-ada-002'
 module openAi 'core/ai/cognitiveservices.bicep' = {
   name: 'openai'
   scope: openAiResourceGroup
@@ -65,6 +66,18 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
         sku: {
           name: 'Standard'
           capacity: 30
+        }
+      }
+      {
+        name: 'text-embedding-ada-002'
+        model: {
+          format: 'OpenAI'
+          name: 'text-embedding-ada-002'
+          version: '2'
+        }
+        sku: {
+          name: 'Standard'
+          capacity: 20
         }
       }
     ]
