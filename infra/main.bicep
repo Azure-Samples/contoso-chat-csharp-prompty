@@ -172,16 +172,6 @@ module aca 'app/aca.bicep' = {
   }
 }
 
-module openAiRole 'core/security/role.bicep' = {
-  scope: openAiResourceGroup
-  name: 'openai-role'
-  params: {
-    principalId: managedIdentity.outputs.managedIdentityPrincipalId
-    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd' //OpenAI Cognitive User
-    principalType: 'ServicePrincipal'
-  }
-}
-
 module aiSearchRole 'core/security/role.bicep' = {
   scope: openAiResourceGroup
   name: 'ai-search-role'
