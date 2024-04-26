@@ -176,7 +176,7 @@ module openAiRole 'core/security/role.bicep' = {
   scope: openAiResourceGroup
   name: 'openai-role'
   params: {
-    principalId: managedIdentity.outputs.managedIdentityClientId
+    principalId: managedIdentity.outputs.managedIdentityPrincipalId
     roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd' //OpenAI Cognitive User
     principalType: 'ServicePrincipal'
   }
@@ -186,7 +186,7 @@ module aiSearchRole 'core/security/role.bicep' = {
   scope: openAiResourceGroup
   name: 'ai-search-role'
   params: {
-    principalId: managedIdentity.outputs.managedIdentityClientId
+    principalId: managedIdentity.outputs.managedIdentityPrincipalId
     roleDefinitionId: '8ebe5a00-799e-43f5-93ac-243d3dce84a7' //Search Index Data Contributor
     principalType: 'ServicePrincipal'
   }
@@ -196,7 +196,7 @@ module cosmosRole 'core/security/role.bicep' = {
   scope: openAiResourceGroup
   name: 'cosmos-role'
   params: {
-    principalId: managedIdentity.outputs.managedIdentityClientId
+    principalId: managedIdentity.outputs.managedIdentityPrincipalId
     roleDefinitionId: 'fbdf93bf-df7d-467e-a4d2-9458aa1360c8' //Cosmos DB Account
     principalType: 'ServicePrincipal'
   }
