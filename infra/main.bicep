@@ -192,6 +192,16 @@ module cosmosRole 'core/security/role.bicep' = {
   }
 }
 
+module cosmosRoleContributor 'core/security/role.bicep' = {
+  scope: openAiResourceGroup
+  name: 'cosmos-role-Contributor'
+  params: {
+    principalId: managedIdentity.outputs.managedIdentityPrincipalId
+    roleDefinitionId: '7ca78c08-252a-4471-8644-bb5ff32d4ba0' //Search Service Contributor
+    principalType: 'ServicePrincipal'
+  }
+}
+
 module cosmosAccountRole 'core/security/role-cosmos.bicep' = {
   scope: openAiResourceGroup
   name: 'cosmos-account-role'
