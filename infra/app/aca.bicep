@@ -31,22 +31,6 @@ module app '../core/host/container-app-upsert.bicep' = {
     containerRegistryName: containerRegistryName
     env: [
       {
-        name: 'AZURE_OPENAI_DEPLOYMENT'
-        value: openAiDeploymentName
-      }
-      {
-        name: 'AZURE_OPENAI_ENDPOINT'
-        value: openAiEndpoint
-      }
-      {
-        name: 'AZURE_OPENAI_API_VERSION'
-        value: openAiApiVersion
-      }
-      {
-        name: 'AZURE_USERASSIGNED_ID'
-        value: identityId
-      }
-      {
         name: 'AZURE_CLIENT_ID'
         value: identityId
       }
