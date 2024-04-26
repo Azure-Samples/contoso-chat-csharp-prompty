@@ -30,6 +30,9 @@
     <None Update="Evaluations\relevance.prompty">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="chat.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
