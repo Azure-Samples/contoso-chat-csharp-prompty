@@ -44,6 +44,7 @@ module managedIdentity 'core/security/managed-identity.bicep' = {
 }
 
 var openAiDeploymentName = 'chatgpt'
+var openAiEmbeddingsDeploymentName = 'text-embedding-ada-002'
 module openAi 'core/ai/cognitiveservices.bicep' = {
   name: 'openai'
   scope: openAiResourceGroup
@@ -67,6 +68,18 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
           capacity: 30
         }
       }
+      {
+        name: openAiEmbeddingsDeploymentName
+        model: {
+          format: 'OpenAI'
+          name: 'text-embedding-ada-002'
+          version: '2'
+        }
+        sku: {
+          name: 'Standard'
+          capacity: 20
+        }
+      }
     ]
   }
 }
@@ -78,6 +91,11 @@ module search 'core/search/search-services.bicep' = {
     name: !empty(searchServiceName) ? searchServiceName : '${prefix}-search-contoso'
     location: location
     semanticSearch: 'free'
+    authOptions: {
+      aadOrApiKey: {
+        aadAuthFailureMode: 'http401WithBearerChallenge'
+      }
+    }
   }
 }
 
@@ -171,7 +189,7 @@ module cosmosRole 'core/security/role.bicep' = {
   name: 'cosmos-role'
   params: {
     principalId: managedIdentity.outputs.managedIdentityClientId
-    roleDefinitionId: 'fbdf93bf-df7d-467e-a4d2-9458aa1360c8' //Cosmos DB Account Reader Role
+    roleDefinitionId: '00000000-0000-0000-0000-000000000002' //Cosmos DB Built-in Data Contributor
     principalType: 'ServicePrincipal'
   }
 }
