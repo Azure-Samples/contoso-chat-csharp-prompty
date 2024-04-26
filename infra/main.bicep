@@ -17,6 +17,10 @@ param openAiApiVersion string = ''
 param openAiType string = 'azure'
 param searchServiceName string = ''
 param cosmosAccountName string = ''
+param openAiEmbeddingDeploymentName string = ''
+param aiSearchIndexName string = ''
+param cosmosDatabaseName string = ''
+param cosmosContainerName string = ''
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var tags = { 'azd-env-name': name }
@@ -155,12 +159,16 @@ module aca 'app/aca.bicep' = {
     identityId: managedIdentity.outputs.managedIdentityClientId
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
-    openAiDeploymentName: openAiDeploymentName
+    openAiDeploymentName: !empty(openAiDeploymentName) ? openAiDeploymentName : 'gpt-35-turbo'
+    openAiEmbeddingDeploymentName: !empty(openAiEmbeddingDeploymentName) ? openAiEmbeddingDeploymentName : 'text-embedding-ada-002'
     openAiEndpoint: openAi.outputs.endpoint
     openAiType: openAiType
-    openAiApiVersion: openAiApiVersion
+    openAiApiVersion: !empty(openAiApiVersion) ? openAiApiVersion : '2023-07-01-preview'
     aiSearchEndpoint: search.outputs.endpoint
+    aiSearchIndexName: !empty(aiSearchIndexName) ? aiSearchIndexName : 'contoso-products'
     cosmosEndpoint: cosmos.outputs.endpoint
+    cosmosDatabaseName: !empty(cosmosDatabaseName) ? cosmosDatabaseName : 'contoso-outdoor'
+    cosmosContainerName: !empty(cosmosContainerName) ? cosmosContainerName : 'customers'
   }
 }
 
@@ -189,8 +197,18 @@ module cosmosRole 'core/security/role.bicep' = {
   name: 'cosmos-role'
   params: {
     principalId: managedIdentity.outputs.managedIdentityClientId
-    roleDefinitionId: '00000000-0000-0000-0000-000000000002' //Cosmos DB Built-in Data Contributor
+    roleDefinitionId: 'fbdf93bf-df7d-467e-a4d2-9458aa1360c8' //Cosmos DB Account
     principalType: 'ServicePrincipal'
+  }
+}
+
+module cosmosAccountRole 'core/security/role-cosmos.bicep' = {
+  scope: openAiResourceGroup
+  name: 'cosmos-account-role'
+  params: {
+    principalId: managedIdentity.outputs.managedIdentityClientId
+    databaseAccountId: cosmos.outputs.accountId
+    databaseAccountName: cosmos.outputs.accountName
   }
 }
 
