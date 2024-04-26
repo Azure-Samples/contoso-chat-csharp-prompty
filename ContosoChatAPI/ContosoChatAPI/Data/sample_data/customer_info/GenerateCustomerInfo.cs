@@ -21,40 +21,47 @@ namespace ContosoChatAPI.Data
             _indexName = config["AzureAISearch:index_name"];
             _databaseName = config["CosmosDb:databaseName"];
             _containerName = config["CosmosDb:containerName"];
-        }    
-    
+        }
+
         public async Task PopulateCosmosAsync()
         {
-            var database = await _cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseName);
-            var container = await database.Database.CreateContainerIfNotExistsAsync(_containerName, "/id");
-
-            var numDocs = 0;
-
-            var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
-            using (var iterator = container.Container.GetItemQueryIterator<int>(query))
+            try
             {
-                var result = await iterator.ReadNextAsync();
-                numDocs = result.FirstOrDefault();
-            }     
+                var database = await _cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseName);
+                var container = await database.Database.CreateContainerIfNotExistsAsync(_containerName, "/id");
 
-            if (numDocs == 0)
-            {
-                _logger.LogInformation($"Creating CosmosDB container {_containerName} in database {_databaseName}...");
+                var numDocs = 0;
 
-                var jsonFiles = Directory.GetFiles("./Data/sample_data/customer_info", "*.json");
-                foreach (string file in jsonFiles)
+                var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
+                using (var iterator = container.Container.GetItemQueryIterator<int>(query))
                 {
-                    var content = await File.ReadAllTextAsync(file);
-                    var customer = JsonSerializer.Deserialize<Dictionary<string, object>>(content);
+                    var result = await iterator.ReadNextAsync();
+                    numDocs = result.FirstOrDefault();
+                }
 
-                    await container.Container.CreateItemStreamAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)), new PartitionKey(customer["id"].ToString()));
+                if (numDocs == 0)
+                {
+                    _logger.LogInformation($"Creating CosmosDB container {_containerName} in database {_databaseName}...");
 
-                    _logger.LogInformation($"Upserted item with id {customer["id"]}");
+                    var jsonFiles = Directory.GetFiles("./Data/sample_data/customer_info", "*.json");
+                    foreach (string file in jsonFiles)
+                    {
+                        var content = await File.ReadAllTextAsync(file);
+                        var customer = JsonSerializer.Deserialize<Dictionary<string, object>>(content);
+
+                        await container.Container.CreateItemStreamAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)), new PartitionKey(customer["id"].ToString()));
+
+                        _logger.LogInformation($"Upserted item with id {customer["id"]}");
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("CosmosDB container already populated, nothing to do.");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogInformation("CosmosDB container already populated, nothing to do.");
+                _logger.LogError(ex.Message);
             }
         }
 
