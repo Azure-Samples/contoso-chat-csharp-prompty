@@ -42,6 +42,10 @@ module app '../core/host/container-app-upsert.bicep' = {
         value: identityId
       }
       {
+        name: 'AZURE_CLIENT_ID'
+        value: identityId
+      }
+      {
         name: 'COSMOSDB__ENDPOINT'
         value: cosmosEndpoint
       }
