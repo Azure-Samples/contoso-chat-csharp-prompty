@@ -1,34 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using Azure.Search.Documents;
+using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
-using Azure.Core;
-using System.Threading.Tasks;
 using Azure;
 using Azure.AI.OpenAI;
 using Azure.Identity;
-
+using Azure.Search.Documents.Indexes.Models;
+using System.Globalization;
 
 namespace ContosoChatAPI.Data
 {
     public class AISearchData
     {
-        private readonly AzureKeyCredential _credentials;
         private readonly SearchClient _searchClient;
-        readonly string _indexName = "contoso-products";
+        private readonly SearchIndexClient _searchIndexClient;
+        readonly string _indexName;
 
-
-
-        public AISearchData(IConfiguration config)
+        public AISearchData(IConfiguration config, SearchClient searchClient, SearchIndexClient searchIndexClient)
         {
-            var searchConfig = config.GetSection("AzureAISearch");
-
-            _searchClient = new SearchClient(
-                                new Uri(config["AzureAISearch:Endpoint"]),
-                                _indexName,
-                                new DefaultAzureCredential());
-
+            _indexName = config["AzureAISearch:index_name"];
+            _searchClient = searchClient;
+            _searchIndexClient = searchIndexClient;
         }
+
         public async Task<List<Dictionary<string, string>>> RetrieveDocumentationAsync(
                 string question,
                 Embeddings embedding)

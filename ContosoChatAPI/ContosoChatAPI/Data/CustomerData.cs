@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Cosmos;
 using System.Collections.Concurrent;
 using Azure.Identity;
+using System.Text.Json;
 
 namespace ContosoChatAPI.Data
 {
@@ -8,13 +9,17 @@ namespace ContosoChatAPI.Data
     {
         private readonly CosmosClient _cosmosClient;
         private readonly ILogger<CustomerData> logger;
-        private readonly string _databaseName = "contoso-outdoor";
-        private readonly string _containerName = "customers";
+        private readonly IConfiguration config;
+        private readonly string _databaseName;
+        private readonly string _containerName;
 
-        public CustomerData(CosmosClient cosmosClient, ILogger<CustomerData> logger)
+        public CustomerData(CosmosClient cosmosClient, ILogger<CustomerData> logger, IConfiguration config)
         {
             _cosmosClient = cosmosClient;
             this.logger = logger;
+            this.config = config;
+            _databaseName = config["CosmosDb:databaseName"];
+            _containerName = config["CosmosDb:containerName"];
         }
 
         public async Task<Dictionary<string, object>> GetCustomerAsync(string customerId)

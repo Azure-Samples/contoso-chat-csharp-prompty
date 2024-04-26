@@ -21,15 +21,15 @@ namespace Prompty.Core
                             .AddEnvironmentVariables()
                             .Build();
 
-            var section = config.GetSection("Prompty");
+            var section = config.GetSection("OpenAi");
             // get variables from section and assign to promptymodelconfig
             var promptyModelConfig = new PromptyModelConfig();
             if (section != null)
             {
                 var type = section["type"];
                 var apiVersion = section["api_version"];
-                var azureEndpoint = section["azure_endpoint"];
-                var azureDeployment = section["azure_deployment"];
+                var azureEndpoint = section["endpoint"];
+                var azureDeployment = section["deployment"];
                 var apiKey = section["api_key"];
                 if (type != null)
                 {

@@ -6,16 +6,14 @@ namespace ContosoChatAPI.Data
 {
     public class EmbeddingData
     {
-
-        private readonly AzureKeyCredential _credentials;
         private readonly OpenAIClient _openAIClient;
+        private readonly IConfiguration config;
         private readonly ILogger<EmbeddingData> logger;
 
-        public EmbeddingData(IConfiguration config, ILogger<EmbeddingData> logger)
+        public EmbeddingData(IConfiguration config, ILogger<EmbeddingData> logger, OpenAIClient openAIClient)
         {
-            var promptyConfig = config.GetSection("prompty");
-
-            _openAIClient = new(new Uri(promptyConfig["azure_endpoint"]), new DefaultAzureCredential());
+            _openAIClient = openAIClient;
+            this.config = config;
             this.logger = logger;
         }
         public async Task<Embeddings> GetEmbedding(string question)
@@ -24,7 +22,7 @@ namespace ContosoChatAPI.Data
             {
                 EmbeddingsOptions embeddingOptions = new()
                 {
-                    DeploymentName = "text-embedding-ada-002",
+                    DeploymentName = config["OpenAi:embedding_deployment"],
                     Input = { question },
                 };
 

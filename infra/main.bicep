@@ -179,7 +179,7 @@ module aiSearchRole 'core/security/role.bicep' = {
   name: 'ai-search-role'
   params: {
     principalId: managedIdentity.outputs.managedIdentityClientId
-    roleDefinitionId: '1407120a-92aa-4202-b7e9-c0e197c71c8f' //Search Index Data Reader
+    roleDefinitionId: '8ebe5a00-799e-43f5-93ac-243d3dce84a7' //Search Index Data Contributor
     principalType: 'ServicePrincipal'
   }
 }
