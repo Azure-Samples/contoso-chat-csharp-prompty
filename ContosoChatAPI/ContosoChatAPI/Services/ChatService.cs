@@ -2,13 +2,18 @@
 using Newtonsoft.Json;
 using static ContosoChatAPI.Data.CustomerData;
 using ContosoChatAPI.Evaluations;
-using Prompty.Core;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Azure.AI.OpenAI;
+using Azure;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 
 namespace ContosoChatAPI.Services
 {
     public class ChatService
     {
+        private const string _deploymentName = "gpt-35-turbo";
         private readonly IConfiguration _consmos;
         private readonly string _cosmosEndpoint;
         private readonly string _cosmosKey;
@@ -20,6 +25,10 @@ namespace ContosoChatAPI.Services
         private readonly IConfiguration _aiSearch;
         private readonly string _aiSearchEndpoint;
         private readonly string _aiSearchKey;
+
+        //public static IKernelBuilder builder;
+
+        private readonly OpenAIClient _client;
 
         public ChatService()
         {
@@ -40,6 +49,11 @@ namespace ContosoChatAPI.Services
 
             _aiSearchEndpoint = _aiSearch["Endpoint"];
             _aiSearchKey = _aiSearch["Key"];
+
+            _client = new OpenAIClient(
+                    endpoint: new Uri(_oaiEndpoint),
+                    keyCredential: new AzureKeyCredential(_oaiKey)
+);
         }
         public async Task<string> GetResponseAsync(string customerId, string question, List<string> chatHistory)
         {
@@ -56,38 +70,38 @@ namespace ContosoChatAPI.Services
 
             var aiSearch = new AISearchData(_aiSearchEndpoint, _aiSearchKey, "contoso-products");
             var context = await aiSearch.RetrieveDocumentationAsync(question, embedding);
+            var kernel = Kernel.CreateBuilder()
+                .AddAzureOpenAIChatCompletion(_deploymentName, _client)
+                .Build();
 
-            var inputs = new Dictionary<string, dynamic>
-            {
+            var cwd = Directory.GetCurrentDirectory();
+            var chatPromptyPath = Path.Combine(cwd, "chat.prompty");
+
+            var kernelFunction = kernel.CreateFunctionFromPrompty(chatPromptyPath);
+
+            Console.WriteLine("Getting result...");
+            var arguments = new KernelArguments(){
                 { "customer", customer },
                 { "documentation", context },
                 { "question", question },
                 { "chatHistory", chatHistory }
             };
 
-            var prompty = new Prompty.Core.Prompty();
-            // load prompty file
-            prompty.Load("chat.prompty", prompty);
-            // set overides
-
-            prompty.Inputs = inputs;
-
-            Console.WriteLine("Getting result...");
-            prompty = await prompty.Execute(prompty);
-            var result = prompty.ChatResponseMessage.Content;
+            var kernalResult = kernelFunction.InvokeAsync(kernel, arguments).Result;
+            //get string result
 
             // Create score dict with results
             var score = new Dictionary<string, string>();
 
-            score["groundedness"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/groundedness.prompty");
-            score["coherence"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/coherence.prompty");
-            score["relevance"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/relevance.prompty");
-            score["fluency"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/fluency.prompty");
+            //score["groundedness"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/groundedness.prompty");
+            //score["coherence"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/coherence.prompty");
+            //score["relevance"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/relevance.prompty");
+            //score["fluency"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/fluency.prompty");
 
-            Console.WriteLine($"Result: {result}");
+            Console.WriteLine($"Result: {kernalResult}");
             Console.WriteLine($"Score: {string.Join(", ", score)}");
             // add score to result
-            result = JsonConvert.SerializeObject(new { result, score });
+            var result = JsonConvert.SerializeObject(new { kernalResult, score });
 
             return result;
         }

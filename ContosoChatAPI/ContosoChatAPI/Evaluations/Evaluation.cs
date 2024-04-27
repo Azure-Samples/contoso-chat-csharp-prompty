@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using Prompty.Core;
 
 namespace ContosoChatAPI.Evaluations
 {
@@ -36,17 +35,10 @@ namespace ContosoChatAPI.Evaluations
                 { "question", question }
             };
 
-            var prompty = new Prompty.Core.Prompty();
-            prompty.Load(path, prompty);
-            prompty.Inputs = inputs;
-
-            Console.WriteLine("Getting result...");
-            prompty = await prompty.Execute(prompty);
-            var result = prompty.ChatResponseMessage.Content;
 
             // Replace this with your actual coherence evaluation logic
             // For demonstration purposes, I'll return a placeholder result.
-            return result;
+            return "result";
         }
     }
 }
