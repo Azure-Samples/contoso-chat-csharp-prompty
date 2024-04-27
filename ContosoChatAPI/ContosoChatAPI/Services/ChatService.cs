@@ -3,10 +3,8 @@ using Newtonsoft.Json;
 using static ContosoChatAPI.Data.CustomerData;
 using ContosoChatAPI.Evaluations;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Azure.AI.OpenAI;
 using Azure;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 
 namespace ContosoChatAPI.Services
@@ -92,16 +90,18 @@ namespace ContosoChatAPI.Services
 
             // Create score dict with results
             var score = new Dictionary<string, string>();
+            var message = kernalResult.ToString();
 
-            //score["groundedness"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/groundedness.prompty");
-            //score["coherence"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/coherence.prompty");
-            //score["relevance"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/relevance.prompty");
-            //score["fluency"] = await Evaluation.Evaluate(question, context, result, "./Evaluations/fluency.prompty");
+            score["groundedness"] = await Evaluation.Evaluate(question, context, message, "./Evaluations/groundedness.prompty", _deploymentName, _client);
+            score["coherence"] = await Evaluation.Evaluate(question, context, message, "./Evaluations/coherence.prompty", _deploymentName, _client);
+            score["relevance"] = await Evaluation.Evaluate(question, context, message, "./Evaluations/relevance.prompty", _deploymentName, _client);
+            score["fluency"] = await Evaluation.Evaluate(question, context, message, "./Evaluations/fluency.prompty", _deploymentName, _client);
 
             Console.WriteLine($"Result: {kernalResult}");
             Console.WriteLine($"Score: {string.Join(", ", score)}");
             // add score to result
-            var result = JsonConvert.SerializeObject(new { kernalResult, score });
+            
+            var result = JsonConvert.SerializeObject(new { message, score });
 
             return result;
         }
