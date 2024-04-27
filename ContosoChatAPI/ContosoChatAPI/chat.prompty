@@ -1,6 +1,5 @@
 ---
----
-name: Contoso Chat Prompt
+name: Contoso_Chat_Prompt
 description: A retail assistent for Contoso Outdoors products retailer.
 authors:
   - Cassie Breviu
@@ -8,7 +7,7 @@ model:
   api: chat
   configuration:
     type: azure_openai
-    azure_deployment: gpt-35-turbo
+    azure_deployment: gpt-35-turbo-0125
     api_version: 2023-07-01-preview
 ---
 system:
@@ -47,8 +46,8 @@ description: {{item.description}}
 
 
 # Customer Context
-The customer's name is {{customer.firstName}} {{customer.lastName}} and is {{customer.age}} years old.
-{{customer.firstName}} {{customer.lastName}} has a "{{customer.membership}}" membership status.
+The customer's name is {{customer.first_name}} {{customer.last_name}} and is {{customer.age}} years old.
+{{customer.first_name}} {{customer.last_name}} has a "{{customer.membership}}" membership status.
 
 # question
 {{question}}
