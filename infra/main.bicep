@@ -111,9 +111,9 @@ module cosmos 'core/database/cosmos/sql/cosmos-sql-db.bicep' = {
     databaseName: 'contoso-outdoor'
     location: location
     tags: union(tags, {
-      defaultExperience: 'Core (SQL)'
-      'hidden-cosmos-mmspecial': ''
-    })
+        defaultExperience: 'Core (SQL)'
+        'hidden-cosmos-mmspecial': ''
+      })
     containers: [
       {
         name: 'customers'
@@ -152,7 +152,7 @@ module aca 'app/aca.bicep' = {
   name: 'aca'
   scope: resourceGroup
   params: {
-    name: replace('${take(prefix,19)}-ca', '--', '-')
+    name: replace('${take(prefix, 19)}-ca', '--', '-')
     location: location
     tags: tags
     identityName: managedIdentity.outputs.managedIdentityName
@@ -212,9 +212,8 @@ module cosmosAccountRole 'core/security/role-cosmos.bicep' = {
   }
 }
 
-
 output AZURE_LOCATION string = location
-output RESOURCE_GROUP_NAME string =resourceGroup.name
+output RESOURCE_GROUP_NAME string = resourceGroup.name
 
 output AZURE_OPENAI_CHATGPT_DEPLOYMENT string = openAiDeploymentName
 output AZURE_OPENAI_API_VERSION string = openAiApiVersion
