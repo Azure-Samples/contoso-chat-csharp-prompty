@@ -7,6 +7,12 @@ param name string
 
 @minLength(1)
 @description('Primary location for all resources')
+@allowed([ 'canadaeast', 'eastus', 'eastus2', 'francecentral', 'switzerlandnorth', 'uksouth', 'japaneast', 'northcentralus', 'australiaeast', 'swedencentral' ])
+@metadata({
+  azd: {
+    type: 'location'
+  }
+})
 param location string
 
 param openAiResourceName string = ''
