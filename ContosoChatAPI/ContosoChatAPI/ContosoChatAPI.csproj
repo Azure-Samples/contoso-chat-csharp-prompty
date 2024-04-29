@@ -9,14 +9,15 @@
   <ItemGroup>
     <PackageReference Include="Azure.Search.Documents" Version="11.6.0-beta.3" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.39.0" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.9.1" />
+    <PackageReference Include="Microsoft.SemanticKernel.Prompty" Version="1.9.1-alpha" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Prompty.Core\Prompty.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Update="chat.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Evaluations\coherence.prompty">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
