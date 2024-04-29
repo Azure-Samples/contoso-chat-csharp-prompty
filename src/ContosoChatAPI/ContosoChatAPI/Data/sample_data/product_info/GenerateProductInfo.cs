@@ -30,22 +30,37 @@ namespace ContosoChatAPI.Data
 
         public async Task PopulateSearchIndexAsync()
         {
+            var indexExists = false;
+
             try
             {
-                _logger.LogInformation("Veryfying if AI Search index exists...");
+                _logger.LogInformation("Verifying if AI Search index exists...");
                 var indexResponse = await _searchIndexClient.GetIndexAsync(_indexName);
 
                 if (indexResponse.Value.Name == _indexName)
                 {
-                    //Index already exists, nothing to do
-                    _logger.LogInformation("AI Search index already exists, nothing to do.");
-                    return;
+                    indexExists = true;
+                    // Check if there are any documents in the index
+                    var searchOptions = new SearchOptions
+                    {
+                        Size = 1,
+                        IncludeTotalCount = true
+                    };
+                    var searchResults = await _searchClient.SearchAsync<Dictionary<string, object>>("*", searchOptions);
+                    if (searchResults.Value.TotalCount > 0)
+                    {
+                        // Index already has documents, nothing to do
+                        _logger.LogInformation("AI Search index already exists, nothing to do.");
+                        return;
+                    }
                 }
             }
             catch (RequestFailedException)
             {
-                _logger.LogInformation("AI Search index not found, creating index...");
+                //Nothing to do, this is expected because index doesn't exists
             }
+
+            _logger.LogInformation("AI Search index not found, creating index...");
 
             // Create the index
             var index = new SearchIndex(_indexName)
@@ -57,12 +72,7 @@ namespace ContosoChatAPI.Data
                     new SimpleField("filepath", SearchFieldDataType.String) { IsFilterable = true, IsSortable = true },
                     new SearchableField("title") { IsFilterable = true, IsSortable = true },
                     new SimpleField("url", SearchFieldDataType.String) { IsFilterable = true, IsSortable = true },
-                    new SearchField("contentVector", SearchFieldDataType.Collection(SearchFieldDataType.Single))
-                    {
-                        IsSearchable = true,
-                        VectorSearchDimensions = 1536,
-                        VectorSearchProfileName = "myHnswProfile"
-                    },
+                    new VectorSearchField("contentVector", 1536, "myHnswProfile")
                 },
                 SemanticSearch = new()
                 {
@@ -95,7 +105,10 @@ namespace ContosoChatAPI.Data
 
             try
             {
-                await _searchIndexClient.CreateIndexAsync(index);
+                if (!indexExists)
+                {
+                    await _searchIndexClient.CreateIndexAsync(index);
+                }
 
                 // Index the documents
                 // Load products from CSV file
@@ -107,14 +120,13 @@ namespace ContosoChatAPI.Data
                 }).ToList();
 
                 // Generate documents
-                List<Dictionary<string, object>> documents = new List<Dictionary<string, object>>();
+                var documents = new List<Dictionary<string, object>>();
                 foreach (var product in products)
                 {
                     var content = product.description;
                     var id = product.id;
                     var title = product.name;
                     var url = $"/products/{title.ToLower().Replace(' ', '-')}";
-
 
                     EmbeddingsOptions embeddingOptions = new()
                     {
@@ -125,14 +137,14 @@ namespace ContosoChatAPI.Data
                     var returnValue = await _openAIClient.GetEmbeddingsAsync(embeddingOptions);
                     var embedding = returnValue.Value.Data[0].Embedding.ToArray();
                     var document = new Dictionary<string, object>
-                {
-                    { "id", id },
-                    { "content", content },
-                    { "filepath", title.ToLower().Replace(' ', '-') },
-                    { "title", title },
-                    { "url", url },
-                    { "contentVector", embedding }
-                };
+                    {
+                        { "id", id },
+                        { "content", content },
+                        { "filepath", title.ToLower().Replace(' ', '-') },
+                        { "title", title },
+                        { "url", url },
+                        { "contentVector", embedding }
+                    };
                     documents.Add(document);
                 }
 
