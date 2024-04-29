@@ -134,6 +134,18 @@ module logAnalyticsWorkspace 'core/monitor/loganalytics.bicep' = {
   }
 }
 
+module monitoring 'core/monitor/monitoring.bicep' = {
+  name: 'monitoring'
+  scope: resourceGroup
+  params: {
+    location: location
+    tags: tags
+    logAnalyticsName: logAnalyticsWorkspace.name
+    applicationInsightsName: '${prefix}-appinsights'
+    applicationInsightsDashboardName: '${prefix}-dashboard'
+  }
+}
+
 // Container apps host (including container registry)
 module containerApps 'core/host/container-apps.bicep' = {
   name: 'container-apps'
@@ -169,12 +181,13 @@ module aca 'app/aca.bicep' = {
     cosmosEndpoint: cosmos.outputs.endpoint
     cosmosDatabaseName: !empty(cosmosDatabaseName) ? cosmosDatabaseName : 'contoso-outdoor'
     cosmosContainerName: !empty(cosmosContainerName) ? cosmosContainerName : 'customers'
+    appinsights_Connectionstring: monitoring.outputs.applicationInsightsConnectionString
   }
 }
 
 module aiSearchRole 'core/security/role.bicep' = {
-  scope: openAiResourceGroup
-  name: 'ai-search-role'
+  scope: resourceGroup
+  name: 'ai-search-index-data-contributor'
   params: {
     principalId: managedIdentity.outputs.managedIdentityPrincipalId
     roleDefinitionId: '8ebe5a00-799e-43f5-93ac-243d3dce84a7' //Search Index Data Contributor
@@ -182,19 +195,9 @@ module aiSearchRole 'core/security/role.bicep' = {
   }
 }
 
-module cosmosRole 'core/security/role.bicep' = {
-  scope: openAiResourceGroup
-  name: 'cosmos-role'
-  params: {
-    principalId: managedIdentity.outputs.managedIdentityPrincipalId
-    roleDefinitionId: 'fbdf93bf-df7d-467e-a4d2-9458aa1360c8' //Cosmos DB Account
-    principalType: 'ServicePrincipal'
-  }
-}
-
 module cosmosRoleContributor 'core/security/role.bicep' = {
-  scope: openAiResourceGroup
-  name: 'cosmos-role-Contributor'
+  scope: resourceGroup
+  name: 'ai-search-service-contributor'
   params: {
     principalId: managedIdentity.outputs.managedIdentityPrincipalId
     roleDefinitionId: '7ca78c08-252a-4471-8644-bb5ff32d4ba0' //Search Service Contributor
@@ -203,7 +206,7 @@ module cosmosRoleContributor 'core/security/role.bicep' = {
 }
 
 module cosmosAccountRole 'core/security/role-cosmos.bicep' = {
-  scope: openAiResourceGroup
+  scope: resourceGroup
   name: 'cosmos-account-role'
   params: {
     principalId: managedIdentity.outputs.managedIdentityPrincipalId
@@ -230,3 +233,5 @@ output SERVICE_ACA_IMAGE_NAME string = aca.outputs.SERVICE_ACA_IMAGE_NAME
 output AZURE_CONTAINER_ENVIRONMENT_NAME string = containerApps.outputs.environmentName
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerApps.outputs.registryLoginServer
 output AZURE_CONTAINER_REGISTRY_NAME string = containerApps.outputs.registryName
+
+output APPINSIGHTS_CONNECTIONSTRING string = monitoring.outputs.applicationInsightsConnectionString

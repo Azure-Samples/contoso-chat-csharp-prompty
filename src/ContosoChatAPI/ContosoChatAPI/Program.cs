@@ -1,12 +1,12 @@
 using Microsoft.Azure.Cosmos;
 using Azure.Identity;
-using System.Configuration;
 using ContosoChatAPI.Data;
 using Azure.Search.Documents;
 using ContosoChatAPI.Services;
 using ContosoChatAPI.Evaluations;
 using Azure.AI.OpenAI;
 using Azure.Search.Documents.Indexes;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 namespace ContosoChatAPI
 {
@@ -23,22 +23,26 @@ namespace ContosoChatAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddSingleton<CosmosClient>(serviceProvider => {
+            builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
+            {
                 return new CosmosClient(builder.Configuration["CosmosDb:Endpoint"], new DefaultAzureCredential());
             });
 
-            builder.Services.AddSingleton<OpenAIClient>(serviceProvider => {
+            builder.Services.AddSingleton<OpenAIClient>(serviceProvider =>
+            {
                 return new OpenAIClient(new Uri(builder.Configuration["OpenAi:endpoint"]), new DefaultAzureCredential());
             });
 
-            builder.Services.AddSingleton<SearchClient>(serviceProvider => {
+            builder.Services.AddSingleton<SearchClient>(serviceProvider =>
+            {
                 return new SearchClient(
                                 new Uri(builder.Configuration["AzureAISearch:Endpoint"]),
                                 builder.Configuration["AzureAISearch:index_name"],
                                 new DefaultAzureCredential());
             });
 
-            builder.Services.AddSingleton<SearchIndexClient>(serviceProvider => {
+            builder.Services.AddSingleton<SearchIndexClient>(serviceProvider =>
+            {
                 return new SearchIndexClient(
                                 new Uri(builder.Configuration["AzureAISearch:Endpoint"]),
                                 new DefaultAzureCredential());
@@ -52,16 +56,22 @@ namespace ContosoChatAPI
             builder.Services.AddScoped<Evaluation>();
             builder.Services.AddScoped<ChatService>();
 
+            //Application Insights
+            builder.Services.AddOpenTelemetry().UseAzureMonitor(options => {
+                options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+                options.Credential = new DefaultAzureCredential();
+            });
+
             var app = builder.Build();
 
-            app.Lifetime.ApplicationStarted.Register(async () =>
+            app.Lifetime.ApplicationStarted.Register(() =>
             {
                 //Populate CosmosDB and AI Search with sample data
                 var customerData = app.Services.GetRequiredService<GenerateCustomerInfo>();
                 var aiSearchData = app.Services.GetRequiredService<GenerateProductInfo>();
 
-                await customerData.PopulateCosmosAsync();
-                await aiSearchData.PopulateSearchIndexAsync();
+                _ = customerData.PopulateCosmosAsync();
+                _ = aiSearchData.PopulateSearchIndexAsync();
             });
 
             // Configure the HTTP request pipeline.

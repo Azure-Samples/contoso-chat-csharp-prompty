@@ -17,6 +17,7 @@ param cosmosDatabaseName string
 param cosmosContainerName string
 param aiSearchEndpoint string
 param aiSearchIndexName string
+param appinsights_Connectionstring string
 
 
 module app '../core/host/container-app-upsert.bicep' = {
@@ -73,6 +74,10 @@ module app '../core/host/container-app-upsert.bicep' = {
       {
         name: 'OPENAI__EMBEDDING_DEPLOYMENT'
         value: openAiEmbeddingDeploymentName
+      }
+      {
+        name: 'APPLICATIONINSIGHTS__CONNECTIONSTRING'
+        value: appinsights_Connectionstring
       }
 
     ]
