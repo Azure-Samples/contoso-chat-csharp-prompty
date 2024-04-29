@@ -215,6 +215,16 @@ module cosmosAccountRole 'core/security/role-cosmos.bicep' = {
   }
 }
 
+module appinsightsAccountRole 'core/security/role.bicep' = {
+  scope: resourceGroup
+  name: 'appinsights-account-role'
+  params: {
+    principalId: managedIdentity.outputs.managedIdentityPrincipalId
+    roleDefinitionId: '3913510d-42f4-4e42-8a64-420c390055eb' // Monitoring Metrics Publisher
+    principalType: 'ServicePrincipal'
+  }
+}
+
 output AZURE_LOCATION string = location
 output RESOURCE_GROUP_NAME string = resourceGroup.name
 
