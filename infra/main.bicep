@@ -28,16 +28,15 @@ param openAiResourceLocation string
 
 
 param openAiSkuName string = ''
-param openAiApiVersion string = '2023-07-01-preview'
+param openAiApiVersion string = ''
 param openAiType string = 'azure'
 param searchServiceName string = ''
 param cosmosAccountName string = ''
-param openAiEmbeddingDeploymentName string = 'text-embedding-ada-002'
+param openAiEmbeddingDeploymentName string = ''
 param aiSearchIndexName string = 'contoso-products'
 param cosmosDatabaseName string = 'contoso-outdoor'
 param cosmosContainerName string = 'customers'
-param openAiDeploymentName string = 'chatgpt'
-param openAiEmbeddingsDeploymentName string = 'text-embedding-ada-002'
+param openAiDeploymentName string = ''
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var tags = { 'azd-env-name': name }
@@ -88,7 +87,7 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
         }
       }
       {
-        name: openAiEmbeddingsDeploymentName
+        name: openAiEmbeddingDeploymentName
         model: {
           format: 'OpenAI'
           name: 'text-embedding-ada-002'

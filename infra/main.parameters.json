@@ -15,13 +15,13 @@
       "value": "${AZURE_OPENAI_RESOURCE_LOCATION}"
     },
     "openAiApiVersion": {
-      "value": "${AZURE_OPENAI_API_VERSION}"
+      "value": "${AZURE_OPENAI_API_VERSION=2023-07-01-preview}"
     },
     "openAiEmbeddingDeploymentName": {
-      "value": "${AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME}"
+      "value": "${AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002}"
     },
     "openAiDeploymentName": {
-      "value": "${AZURE_OPENAI_DEPLOYMENT_NAME}"
+      "value": "${AZURE_OPENAI_DEPLOYMENT_NAME=chatgpt}"
     }
   }
 }
