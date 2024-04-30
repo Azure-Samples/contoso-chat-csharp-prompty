@@ -7,7 +7,6 @@ param name string
 
 @minLength(1)
 @description('Primary location for all resources')
-@allowed([ 'canadaeast', 'eastus', 'eastus2', 'francecentral', 'switzerlandnorth', 'uksouth', 'japaneast', 'northcentralus', 'australiaeast', 'swedencentral' ])
 @metadata({
   azd: {
     type: 'location'
@@ -17,16 +16,28 @@ param location string
 
 param openAiResourceName string = ''
 param openAiResourceGroupName string = ''
-param openAiResourceGroupLocation string = ''
+
+@description('Location for the OpenAI resource')
+@allowed([ 'canadaeast', 'eastus', 'eastus2', 'francecentral', 'switzerlandnorth', 'uksouth', 'japaneast', 'northcentralus', 'australiaeast', 'swedencentral' ])
+@metadata({
+  azd: {
+    type: 'location'
+  }
+})
+param openAiResourceLocation string
+
+
 param openAiSkuName string = ''
-param openAiApiVersion string = ''
+param openAiApiVersion string = '2023-07-01-preview'
 param openAiType string = 'azure'
 param searchServiceName string = ''
 param cosmosAccountName string = ''
-param openAiEmbeddingDeploymentName string = ''
-param aiSearchIndexName string = ''
-param cosmosDatabaseName string = ''
-param cosmosContainerName string = ''
+param openAiEmbeddingDeploymentName string = 'text-embedding-ada-002'
+param aiSearchIndexName string = 'contoso-products'
+param cosmosDatabaseName string = 'contoso-outdoor'
+param cosmosContainerName string = 'customers'
+param openAiDeploymentName string = 'chatgpt'
+param openAiEmbeddingsDeploymentName string = 'text-embedding-ada-002'
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var tags = { 'azd-env-name': name }
@@ -53,14 +64,12 @@ module managedIdentity 'core/security/managed-identity.bicep' = {
   }
 }
 
-var openAiDeploymentName = 'chatgpt'
-var openAiEmbeddingsDeploymentName = 'text-embedding-ada-002'
 module openAi 'core/ai/cognitiveservices.bicep' = {
   name: 'openai'
   scope: openAiResourceGroup
   params: {
     name: !empty(openAiResourceName) ? openAiResourceName : '${resourceToken}-cog'
-    location: !empty(openAiResourceGroupLocation) ? openAiResourceGroupLocation : location
+    location: !empty(openAiResourceLocation) ? openAiResourceLocation : location
     tags: tags
     sku: {
       name: !empty(openAiSkuName) ? openAiSkuName : 'S0'
@@ -100,7 +109,7 @@ module search 'core/search/search-services.bicep' = {
   params: {
     name: !empty(searchServiceName) ? searchServiceName : '${prefix}-search-contoso'
     location: location
-    semanticSearch: 'free'
+    semanticSearch: 'standard'
     authOptions: {
       aadOrApiKey: {
         aadAuthFailureMode: 'http401WithBearerChallenge'
@@ -178,15 +187,15 @@ module aca 'app/aca.bicep' = {
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
     openAiDeploymentName: !empty(openAiDeploymentName) ? openAiDeploymentName : 'gpt-35-turbo'
-    openAiEmbeddingDeploymentName: !empty(openAiEmbeddingDeploymentName) ? openAiEmbeddingDeploymentName : 'text-embedding-ada-002'
+    openAiEmbeddingDeploymentName: openAiEmbeddingDeploymentName
     openAiEndpoint: openAi.outputs.endpoint
     openAiType: openAiType
-    openAiApiVersion: !empty(openAiApiVersion) ? openAiApiVersion : '2023-07-01-preview'
+    openAiApiVersion: openAiApiVersion
     aiSearchEndpoint: search.outputs.endpoint
-    aiSearchIndexName: !empty(aiSearchIndexName) ? aiSearchIndexName : 'contoso-products'
+    aiSearchIndexName: aiSearchIndexName
     cosmosEndpoint: cosmos.outputs.endpoint
-    cosmosDatabaseName: !empty(cosmosDatabaseName) ? cosmosDatabaseName : 'contoso-outdoor'
-    cosmosContainerName: !empty(cosmosContainerName) ? cosmosContainerName : 'customers'
+    cosmosDatabaseName: cosmosDatabaseName
+    cosmosContainerName: cosmosContainerName
     appinsights_Connectionstring: monitoring.outputs.applicationInsightsConnectionString
   }
 }
