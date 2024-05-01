@@ -14,7 +14,10 @@ param name string
 })
 param location string
 
+@description('The name of the OpenAI resource')
 param openAiResourceName string = ''
+
+@description('The name of the resource group for the OpenAI resource')
 param openAiResourceGroupName string = ''
 
 @description('Location for the OpenAI resource')
@@ -27,15 +30,34 @@ param openAiResourceGroupName string = ''
 param openAiResourceLocation string
 
 
+@description('The SKU name of the OpenAI resource')
 param openAiSkuName string = ''
+
+@description('The API version of the OpenAI resource')
 param openAiApiVersion string = ''
+
+@description('The type of the OpenAI resource')
 param openAiType string = 'azure'
+
+@description('The name of the search service')
 param searchServiceName string = ''
+
+@description('The name of the Cosmos account')
 param cosmosAccountName string = ''
+
+@description('The name of the OpenAI embedding deployment')
 param openAiEmbeddingDeploymentName string = ''
+
+@description('The name of the AI search index')
 param aiSearchIndexName string = 'contoso-products'
+
+@description('The name of the Cosmos database')
 param cosmosDatabaseName string = 'contoso-outdoor'
+
+@description('The name of the Cosmos container')
 param cosmosContainerName string = 'customers'
+
+@description('The name of the OpenAI deployment')
 param openAiDeploymentName string = ''
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
