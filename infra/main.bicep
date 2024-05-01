@@ -60,6 +60,9 @@ param cosmosContainerName string = 'customers'
 @description('The name of the OpenAI deployment')
 param openAiDeploymentName string = ''
 
+@description('Id of the user or app to assign application roles')
+param principalId string = ''
+
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var tags = { 'azd-env-name': name }
 
@@ -254,6 +257,36 @@ module appinsightsAccountRole 'core/security/role.bicep' = {
     principalId: managedIdentity.outputs.managedIdentityPrincipalId
     roleDefinitionId: '3913510d-42f4-4e42-8a64-420c390055eb' // Monitoring Metrics Publisher
     principalType: 'ServicePrincipal'
+  }
+}
+
+module userAiSearchRole 'core/security/role.bicep' = if (!empty(principalId)) {
+  scope: resourceGroup
+  name: 'user-ai-search-index-data-contributor'
+  params: {
+    principalId: principalId
+    roleDefinitionId: '8ebe5a00-799e-43f5-93ac-243d3dce84a7' //Search Index Data Contributor
+    principalType: 'User'
+  }
+}
+
+module userCosmosRoleContributor 'core/security/role.bicep' = if (!empty(principalId)) {
+  scope: resourceGroup
+  name: 'user-ai-search-service-contributor'
+  params: {
+    principalId: principalId
+    roleDefinitionId: '7ca78c08-252a-4471-8644-bb5ff32d4ba0' //Search Service Contributor
+    principalType: 'User'
+  }
+}
+
+module userCosmosAccountRole 'core/security/role-cosmos.bicep' = if (!empty(principalId)) {
+  scope: resourceGroup
+  name: 'user-cosmos-account-role'
+  params: {
+    principalId: principalId
+    databaseAccountId: cosmos.outputs.accountId
+    databaseAccountName: cosmos.outputs.accountName
   }
 }
 

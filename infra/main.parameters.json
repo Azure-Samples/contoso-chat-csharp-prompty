@@ -22,6 +22,9 @@
     },
     "openAiDeploymentName": {
       "value": "${AZURE_OPENAI_DEPLOYMENT_NAME=chatgpt}"
+    },
+    "principalId": {
+      "value": "${AZURE_PRINCIPAL_ID}"
     }
   }
 }
