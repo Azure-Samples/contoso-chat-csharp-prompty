@@ -109,11 +109,7 @@ module search 'core/search/search-services.bicep' = {
     name: !empty(searchServiceName) ? searchServiceName : '${prefix}-search-contoso'
     location: location
     semanticSearch: 'standard'
-    authOptions: {
-      aadOrApiKey: {
-        aadAuthFailureMode: 'http401WithBearerChallenge'
-      }
-    }
+    disableLocalAuth: true
   }
 }
 
