@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "C#: ContosoChatAPI",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\src\\ContosoChatAPI\\ContosoChatAPI\\ContosoChatAPI.csproj",
+            "launchConfigurationId": "TargetFramework=;http"
+        }
+    ]
+}
