@@ -1,9 +1,5 @@
 using ContosoChatAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace ContosoChatAPI.Controllers
 {

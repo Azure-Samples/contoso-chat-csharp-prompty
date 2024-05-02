@@ -1,9 +1,9 @@
 ﻿using ContosoChatAPI.Data;
 using Newtonsoft.Json;
-using static ContosoChatAPI.Data.CustomerData;
 using ContosoChatAPI.Evaluations;
-using Prompty.Core;
-using Microsoft.Azure.Cosmos;
+using Microsoft.SemanticKernel;
+using System.Configuration;
+using Azure.AI.OpenAI;
 
 
 namespace ContosoChatAPI.Services
@@ -14,58 +14,65 @@ namespace ContosoChatAPI.Services
         private readonly AISearchData _aiSearch;
         private readonly EmbeddingData _embeddingData;
         private readonly Evaluation _evaluation;
-        private readonly ILogger<ChatService> logger;
+        private readonly ILogger<ChatService> _logger;
+        private readonly OpenAIClient _openaiClient;
+        private readonly string _deploymentName;
 
-        public ChatService(CustomerData customerData, AISearchData aiSearch, EmbeddingData embeddingData, Evaluation evaluation, ILogger<ChatService> logger)
+        public ChatService(CustomerData customerData, AISearchData aiSearch, EmbeddingData embeddingData, Evaluation evaluation, ILogger<ChatService> logger, OpenAIClient openaiClient, IConfiguration config)
         {
             _customerData = customerData;
             _aiSearch = aiSearch;
             _embeddingData = embeddingData;
             _evaluation = evaluation;
-            this.logger = logger;
+            _logger = logger;
+            _openaiClient = openaiClient;
+            _deploymentName = config["OpenAi:deployment"];
         }
 
         public async Task<string> GetResponseAsync(string customerId, string question, List<string> chatHistory)
         {
-            logger.LogInformation($"Inputs: CustomerId = {customerId}, Question = {question}");
+            _logger.LogInformation($"Inputs: CustomerId = {customerId}, Question = {question}");
 
             var customer = await _customerData.GetCustomerAsync(customerId);
             var embedding = await _embeddingData.GetEmbedding(question);
             var context = await _aiSearch.RetrieveDocumentationAsync(question, embedding);
 
-            var inputs = new Dictionary<string, dynamic>
-            {
+            var kernel = Kernel.CreateBuilder()
+                .AddAzureOpenAIChatCompletion(_deploymentName, _openaiClient)
+                .Build();
+
+            var cwd = Directory.GetCurrentDirectory();
+            var chatPromptyPath = Path.Combine(cwd, "chat.prompty");
+
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            var kernelFunction = kernel.CreateFunctionFromPrompty(chatPromptyPath);
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
+            _logger.LogInformation("Getting result...");
+            var arguments = new KernelArguments(){
                 { "customer", customer },
                 { "documentation", context },
                 { "question", question },
                 { "chatHistory", chatHistory }
             };
 
-            var prompty = new Prompty.Core.Prompty();
-            // load prompty file
-            prompty.Load("chat.prompty", prompty);
-
-            // set overides
-            prompty.Inputs = inputs;
-
-            logger.LogInformation("Getting result...");
-
-            prompty = await prompty.Execute(prompty);
-            var result = prompty.ChatResponseMessage.Content;
+            var kernalResult = await kernelFunction.InvokeAsync(kernel, arguments);
+            //get string result
 
             // Create score dict with results
-            var score = new Dictionary<string, string>
-            {
-                ["groundedness"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/groundedness.prompty"),
-                ["coherence"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/coherence.prompty"),
-                ["relevance"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/relevance.prompty"),
-                ["fluency"] = await _evaluation.Evaluate(question, context, result, "./Evaluations/fluency.prompty")
-            };
+            var score = new Dictionary<string, string>();
+            var message = kernalResult.ToString();
 
-            logger.LogInformation($"Result: {result}");
-            logger.LogInformation($"Score: {string.Join(", ", score)}");
+            score["groundedness"] = await _evaluation.Evaluate(question, context, message, "./Evaluations/groundedness.prompty");
+            score["coherence"] = await _evaluation.Evaluate(question, context, message, "./Evaluations/coherence.prompty");
+            score["relevance"] = await _evaluation.Evaluate(question, context, message, "./Evaluations/relevance.prompty");
+            score["fluency"] = await _evaluation.Evaluate(question, context, message, "./Evaluations/fluency.prompty");
+
+            _logger.LogInformation($"Result: {kernalResult}");
+            _logger.LogInformation($"Score: {string.Join(", ", score)}");
             // add score to result
-            result = JsonConvert.SerializeObject(new { result, score });
+
+            var result = JsonConvert.SerializeObject(new { message, score });
 
             return result;
         }

@@ -5,7 +5,7 @@ model:
   api: chat
   configuration:
     type: azure_openai
-    azure_deployment: gpt-4
+    azure_deployment: chatgpt
     api_version: 2023-07-01-preview
 sample:
   question: What feeds all the fixtures in low voltage tracks instead of each light having a line-to-low voltage transformer?

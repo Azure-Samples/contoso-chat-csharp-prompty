@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Azure.Search.Documents;
+﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
-using Azure;
 using Azure.AI.OpenAI;
-using Azure.Identity;
-using Azure.Search.Documents.Indexes.Models;
-using System.Globalization;
 
 namespace ContosoChatAPI.Data
 {

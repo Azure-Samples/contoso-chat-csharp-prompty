@@ -3,7 +3,7 @@ targetScope = 'subscription'
 @minLength(1)
 @maxLength(64)
 @description('Name which is used to generate a short unique hash for each resource')
-param name string
+param environmentName string
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -63,11 +63,11 @@ param openAiDeploymentName string = ''
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
 
-var resourceToken = toLower(uniqueString(subscription().id, name, location))
-var tags = { 'azd-env-name': name }
+var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+var tags = { 'azd-env-name': environmentName }
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: 'rg-${name}'
+  name: 'rg-${environmentName}'
   location: location
   tags: tags
 }
@@ -76,7 +76,7 @@ resource openAiResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' exi
   name: !empty(openAiResourceGroupName) ? openAiResourceGroupName : resourceGroup.name
 }
 
-var prefix = '${name}-${resourceToken}'
+var prefix = '${environmentName}-${resourceToken}'
 
 module managedIdentity 'core/security/managed-identity.bicep' = {
   name: 'managed-identity'
@@ -276,6 +276,16 @@ module userCosmosRoleContributor 'core/security/role.bicep' = if (!empty(princip
   params: {
     principalId: principalId
     roleDefinitionId: '7ca78c08-252a-4471-8644-bb5ff32d4ba0' //Search Service Contributor
+    principalType: 'User'
+  }
+}
+
+module openaiRoleUser 'core/security/role.bicep' = if (!empty(principalId)) {
+  scope: resourceGroup
+  name: 'user-openai-user'
+  params: {
+    principalId: principalId
+    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd' //Cognitive Services OpenAI User
     principalType: 'User'
   }
 }

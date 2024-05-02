@@ -1,6 +1,4 @@
 ﻿using Azure.AI.OpenAI;
-using Azure;
-using Azure.Identity;
 
 namespace ContosoChatAPI.Data
 {
