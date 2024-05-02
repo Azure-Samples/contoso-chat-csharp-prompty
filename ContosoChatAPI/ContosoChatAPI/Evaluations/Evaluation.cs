@@ -38,7 +38,9 @@ namespace ContosoChatAPI.Evaluations
             var cwd = Directory.GetCurrentDirectory();
             var chatPromptyPath = Path.Combine(cwd, prompty);
 
+#pragma warning disable SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             var kernelFunction = kernel.CreateFunctionFromPrompty(chatPromptyPath);
+#pragma warning restore SKEXP0040 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
             Console.WriteLine("Getting result...");
             var arguments = new KernelArguments(){
