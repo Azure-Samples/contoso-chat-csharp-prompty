@@ -7,11 +7,11 @@ hooks:
       shell: sh
       continueOnError: false
       interactive: true
-      run: infra/hooks/postprovision.sh
+      run: ./infra/hooks/postprovision.sh
     windows:
       shell: pwsh
       continueOnError: false
       interactive: true
-      run: infra/hooks/postprovision.ps1
+      run: ./infra/hooks/postprovision.ps1
 infra:
     provider: "bicep"
