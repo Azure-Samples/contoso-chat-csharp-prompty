@@ -23,8 +23,13 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
     {
         _logger.LogInformation("CustomerId = {CustomerID}, Question = {Question}", customerId, question);
 
-        var customer = await _customerData.GetCustomerAsync(customerId);
-        var embedding = await _embedding.GenerateEmbeddingAsync(question);
+        var customerTask = _customerData.GetCustomerAsync(customerId);
+        var embeddingTask = _embedding.GenerateEmbeddingAsync(question);
+        await Task.WhenAll(customerTask, embeddingTask);
+
+        var customer = await customerTask;
+        var embedding = await embeddingTask;
+
         var context = await _aiSearch.RetrieveDocumentationAsync(question, embedding);
 
         _logger.LogInformation("Getting result.");
@@ -37,12 +42,20 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
         });
 
         _logger.LogInformation("Evaluating result.");
+
+
+        var groundedNessEvaluation = Evaluate(_groudedness, question, context, answer);
+        var coherenceEvaluation = Evaluate(_coherence, question, context, answer);
+        var relevanceEvaluation = Evaluate(_relevance, question, context, answer);
+        var fluencyEvaluation = Evaluate(_fluency, question, context, answer);
+        await Task.WhenAll(groundedNessEvaluation, coherenceEvaluation, relevanceEvaluation, fluencyEvaluation);
+
         var score = new Dictionary<string, string?>
         {
-            ["groundedness"] = await Evaluate(_groudedness, question, context, answer),
-            ["coherence"] = await Evaluate(_coherence, question, context, answer),
-            ["relevance"] = await Evaluate(_relevance, question, context, answer),
-            ["fluency"] = await Evaluate(_fluency, question, context, answer),
+            ["groundedness"] = await groundedNessEvaluation,
+            ["coherence"] = await coherenceEvaluation,
+            ["relevance"] = await relevanceEvaluation,
+            ["fluency"] = await fluencyEvaluation,
         };
 
         if (_logger.IsEnabled(LogLevel.Information))

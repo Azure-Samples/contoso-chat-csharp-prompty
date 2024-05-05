@@ -47,15 +47,8 @@ builder.Services.AddOpenTelemetry().UseAzureMonitor(options =>
 
 var app = builder.Build();
 
-app.Lifetime.ApplicationStarted.Register(() =>
-{
-    //Populate CosmosDB and AI Search with sample data
-    var customerData = app.Services.GetRequiredService<GenerateCustomerInfo>();
-    var aiSearchData = app.Services.GetRequiredService<GenerateProductInfo>();
-
-    _ = customerData.PopulateCosmosAsync();
-    _ = aiSearchData.PopulateSearchIndexAsync();
-});
+// Make sure database and search index are populated with data and application is in a good startup state
+await PopulateData(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -69,3 +62,15 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+async Task PopulateData(IServiceProvider serviceProvider)
+{
+    var customerData = serviceProvider.GetRequiredService<GenerateCustomerInfo>();
+    var aiSearchData = serviceProvider.GetRequiredService<GenerateProductInfo>();
+
+    await Task.WhenAll(
+        customerData.PopulateCosmosAsync(),
+        aiSearchData.PopulateSearchIndexAsync()
+    );
+}
