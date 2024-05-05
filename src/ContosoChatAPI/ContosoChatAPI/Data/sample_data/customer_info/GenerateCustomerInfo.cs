@@ -2,68 +2,54 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
 
-namespace ContosoChatAPI.Data
+namespace ContosoChatAPI.Data;
+
+public sealed class GenerateCustomerInfo(ILogger<GenerateCustomerInfo> logger, IConfiguration config, CosmosClient cosmosClient)
 {
-    public class GenerateCustomerInfo
+    private readonly ILogger<GenerateCustomerInfo> _logger = logger;
+    private readonly CosmosClient _cosmosClient = cosmosClient;
+    private readonly string _databaseName = config["CosmosDb:databaseName"]!;
+    private readonly string _containerName = config["CosmosDb:containerName"]!;
+
+    public async Task PopulateCosmosAsync()
     {
-        private ILogger<GenerateCustomerInfo> _logger;
-        private IConfiguration _config;
-        private readonly CosmosClient _cosmosClient;
-        private readonly string _indexName;
-        private readonly string _databaseName;
-        private readonly string _containerName;
-
-        public GenerateCustomerInfo(ILogger<GenerateCustomerInfo> logger, IConfiguration config, CosmosClient cosmosClient)
+        try
         {
-            _logger = logger;
-            _config = config;
-            _cosmosClient = cosmosClient;
-            _indexName = config["AzureAISearch:index_name"];
-            _databaseName = config["CosmosDb:databaseName"];
-            _containerName = config["CosmosDb:containerName"];
-        }
+            var database = await _cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseName);
+            var container = await database.Database.CreateContainerIfNotExistsAsync(_containerName, "/id");
 
-        public async Task PopulateCosmosAsync()
-        {
-            try
+            var numDocs = 0;
+
+            var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
+            using (var iterator = container.Container.GetItemQueryIterator<int>(query))
             {
-                var database = await _cosmosClient.CreateDatabaseIfNotExistsAsync(_databaseName);
-                var container = await database.Database.CreateContainerIfNotExistsAsync(_containerName, "/id");
+                var result = await iterator.ReadNextAsync();
+                numDocs = result.FirstOrDefault();
+            }
 
-                var numDocs = 0;
+            if (numDocs == 0)
+            {
+                _logger.LogInformation("Creating CosmosDB container {ContainerName} in database {DatabaseName}...", _containerName, _databaseName);
 
-                var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
-                using (var iterator = container.Container.GetItemQueryIterator<int>(query))
+                var jsonFiles = Directory.GetFiles("./Data/sample_data/customer_info", "*.json");
+                foreach (string file in jsonFiles)
                 {
-                    var result = await iterator.ReadNextAsync();
-                    numDocs = result.FirstOrDefault();
-                }
+                    var content = await File.ReadAllTextAsync(file);
+                    var customer = JsonSerializer.Deserialize<Dictionary<string, object>>(content)!;
 
-                if (numDocs == 0)
-                {
-                    _logger.LogInformation($"Creating CosmosDB container {_containerName} in database {_databaseName}...");
+                    await container.Container.CreateItemStreamAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)), new PartitionKey(customer["id"].ToString()));
 
-                    var jsonFiles = Directory.GetFiles("./Data/sample_data/customer_info", "*.json");
-                    foreach (string file in jsonFiles)
-                    {
-                        var content = await File.ReadAllTextAsync(file);
-                        var customer = JsonSerializer.Deserialize<Dictionary<string, object>>(content);
-
-                        await container.Container.CreateItemStreamAsync(new MemoryStream(Encoding.UTF8.GetBytes(content)), new PartitionKey(customer["id"].ToString()));
-
-                        _logger.LogInformation($"Upserted item with id {customer["id"]}");
-                    }
-                }
-                else
-                {
-                    _logger.LogInformation("CosmosDB container already populated, nothing to do.");
+                    _logger.LogInformation("Upserted item with id {CustomerID}", customer["id"]);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError("Error in Cosmos: " + ex.Message);
+                _logger.LogInformation("CosmosDB container already populated, nothing to do.");
             }
         }
-
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error populating Cosmos");
+        }
     }
 }
