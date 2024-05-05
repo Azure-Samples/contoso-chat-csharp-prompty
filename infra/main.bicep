@@ -320,3 +320,19 @@ output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerApps.outputs.registry
 output AZURE_CONTAINER_REGISTRY_NAME string = containerApps.outputs.registryName
 
 output APPINSIGHTS_CONNECTIONSTRING string = monitoring.outputs.applicationInsightsConnectionString
+
+
+output OpenAI__Type string = 'azure'
+output OpenAI__API_Version string = openAiApiVersion
+output OpenAI__Endpoint string = openAi.outputs.endpoint
+output OpenAI__Deployment string = openAiDeploymentName
+output OpenAI__Embedding_Deployment string = openAiEmbeddingDeploymentName
+
+output CosmosDb__Endpoint string = cosmos.outputs.endpoint
+output CosmosDb__DatabaseName string = cosmosDatabaseName
+output CosmosDb__ContainerName string = cosmosContainerName
+
+output AzureAISearch__Endpoint string = search.outputs.endpoint
+output AzureAISearch__Index_Name string = aiSearchIndexName
+
+output ApplicationInsights__ConnectionString string = monitoring.outputs.applicationInsightsConnectionString

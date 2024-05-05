@@ -8,18 +8,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5282",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "OPENAI__TYPE": "azure",
-        "OPENAI__API_VERSION": "2023-07-01-preview",
-        "OPENAI__ENDPOINT": "https://contoso-openai.openai.azure.com/",
-        "OPENAI__DEPLOYMENT": "chatgpt",
-        "OPENAI__EMBEDDING_DEPLOYMENT": "text-embedding-ada-002",
-        "COSMOSDB__ENDPOINT": "https://cosmos-contoso-xxx.documents.azure.com:443/",
-        "COSMOSDB__DATABASENAME": "contoso-outdoor",
-        "COSMOSDB__CONTAINERNAME": "customers",
-        "AZUREAISEARCH__ENDPOINT": "https://chatcontoso-xxx-search-contoso.search.windows.net",
-        "AZUREAISEARCH__INDEX_NAME": "contoso-products",
-        "APPLICATIONINSIGHTS__CONNECTIONSTRING": "InstrumentationKey=00000000-0000-0000-0000-000000000000;IngestionEndpoint=https://eastus2-3.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus2.livediagnostics.monitor.azure.com/;ApplicationId=xxxxx"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }
