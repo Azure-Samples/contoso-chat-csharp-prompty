@@ -76,7 +76,7 @@ resource openAiResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' exi
   name: !empty(openAiResourceGroupName) ? openAiResourceGroupName : resourceGroup.name
 }
 
-var prefix = '${environmentName}-${resourceToken}'
+var prefix = toLower('${environmentName}-${resourceToken}')
 
 module managedIdentity 'core/security/managed-identity.bicep' = {
   name: 'managed-identity'
