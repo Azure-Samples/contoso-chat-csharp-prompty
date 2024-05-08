@@ -23,15 +23,12 @@ Samples in JavaScript, Python, and Java. Learn more at https://aka.ms/azai.
 
 # Table of Contents
 
-- [What is this sample?](#what-is-this-sample?)
+- [What is this sample?](#what-is-this-sample)
 - [Features](#features)
 - [Architecture Diagram](#architecture-diagram)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installations](#installations)
   - [Quickstart](#quickstart)
-  - [Local Development](#local-development)
-- [Costs](#costs) 
 - [Security Guidelines](#security-guidelines)
 - [Resources](#resources)
 
