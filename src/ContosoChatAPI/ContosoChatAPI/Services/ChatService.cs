@@ -13,11 +13,11 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
 
     private readonly Kernel _kernel = kernel;
     private readonly ITextEmbeddingGenerationService _embedding = embedding;
-    private readonly KernelFunction _chat = kernel.CreateFunctionFromPrompty("chat.prompty");
-    private readonly KernelFunction _groudedness = kernel.CreateFunctionFromPrompty(Path.Combine("Evaluations", "groundedness.prompty"));
-    private readonly KernelFunction _coherence = kernel.CreateFunctionFromPrompty(Path.Combine("Evaluations", "coherence.prompty"));
-    private readonly KernelFunction _relevance = kernel.CreateFunctionFromPrompty(Path.Combine("Evaluations", "relevance.prompty"));
-    private readonly KernelFunction _fluency = kernel.CreateFunctionFromPrompty(Path.Combine("Evaluations", "fluency.prompty"));
+    private readonly KernelFunction _chat = kernel.CreateFunctionFromPromptyFile("chat.prompty");
+    private readonly KernelFunction _groudedness = kernel.CreateFunctionFromPromptyFile(Path.Combine("Evaluations", "groundedness.prompty"));
+    private readonly KernelFunction _coherence = kernel.CreateFunctionFromPromptyFile(Path.Combine("Evaluations", "coherence.prompty"));
+    private readonly KernelFunction _relevance = kernel.CreateFunctionFromPromptyFile(Path.Combine("Evaluations", "relevance.prompty"));
+    private readonly KernelFunction _fluency = kernel.CreateFunctionFromPromptyFile(Path.Combine("Evaluations", "fluency.prompty"));
 
     public async Task<string> GetResponseAsync(string customerId, string question, List<string> chatHistory)
     {
