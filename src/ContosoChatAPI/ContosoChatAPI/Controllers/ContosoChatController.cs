@@ -8,9 +8,9 @@ namespace ContosoChatAPI.Controllers;
 public sealed class ContosoChatController(ILogger<ContosoChatController> logger, ChatService chatService) : ControllerBase
 {
     [HttpPost(Name = "PostChatRequest")]
-    public async Task<string> Post(string customerId, string question, List<string> chatHistory)
+    public async Task<string> Post(string customerId, string question)
     {
-        string result = await chatService.GetResponseAsync(customerId, question, chatHistory);
+        string result = await chatService.GetResponseAsync(customerId, question);
         logger.LogInformation("Result: {Result}", result);
         return result;
     }

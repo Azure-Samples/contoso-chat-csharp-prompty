@@ -19,7 +19,7 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
     private readonly KernelFunction _relevance = kernel.CreateFunctionFromPromptyFile(Path.Combine("Evaluations", "relevance.prompty"));
     private readonly KernelFunction _fluency = kernel.CreateFunctionFromPromptyFile(Path.Combine("Evaluations", "fluency.prompty"));
 
-    public async Task<string> GetResponseAsync(string customerId, string question, List<string> chatHistory)
+    public async Task<string> GetResponseAsync(string customerId, string question)
     {
         _logger.LogInformation("CustomerId = {CustomerID}, Question = {Question}", customerId, question);
 
@@ -38,7 +38,7 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
             { "customer", customer },
             { "documentation", context },
             { "question", question },
-            { "chatHistory", chatHistory }
+            { "chatHistory", new List<string>() }
         });
 
         _logger.LogInformation("Evaluating result.");
