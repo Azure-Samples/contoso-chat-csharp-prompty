@@ -26,7 +26,6 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
         var customerTask = _customerData.GetCustomerAsync(customerId);
         var embeddingTask = _embedding.GenerateEmbeddingAsync(question);
         await Task.WhenAll(customerTask, embeddingTask);
-
         var customer = await customerTask;
         var embedding = await embeddingTask;
 
@@ -38,12 +37,9 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
             { "customer", customer },
             { "documentation", context },
             { "question", question },
-            { "chatHistory", new List<string>() }
         });
 
         _logger.LogInformation("Evaluating result.");
-
-
         var groundedNessEvaluation = Evaluate(_groudedness, question, context, answer);
         var coherenceEvaluation = Evaluate(_coherence, question, context, answer);
         var relevanceEvaluation = Evaluate(_relevance, question, context, answer);
@@ -58,12 +54,8 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
             ["fluency"] = await fluencyEvaluation,
         };
 
-        if (_logger.IsEnabled(LogLevel.Information))
-        {
-            _logger.LogInformation("Result: {Result}", answer);
-            _logger.LogInformation("Score: {Score}", string.Join(", ", score));
-        }
-
+        _logger.LogInformation("Answer: {Answer}", answer);
+        _logger.LogInformation("Score: {Score}", score);
         return JsonSerializer.Serialize(new { answer, score });
     }
 
@@ -72,8 +64,8 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
         return func.InvokeAsync<string>(_kernel, new()
         {
             { "question", question },
-            { "answer", answer },
             { "context", context },
+            { "answer", answer },
         });
     }
 }
