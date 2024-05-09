@@ -63,6 +63,12 @@ param openAiDeploymentName string = ''
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
 
+@description('Whether the deployment is running on GitHub Actions')
+param runningOnGh string = ''
+
+@description('Whether the deployment is running on Azure DevOps Pipeline')
+param runningOnAdo string = ''
+
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
 
@@ -78,6 +84,8 @@ resource openAiResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' exi
 
 var prefix = toLower('${environmentName}-${resourceToken}')
 
+// USER ROLES
+var principalType = empty(runningOnGh) && empty(runningOnAdo) ? 'User' : 'ServicePrincipal'
 module managedIdentity 'core/security/managed-identity.bicep' = {
   name: 'managed-identity'
   scope: resourceGroup
@@ -266,7 +274,7 @@ module userAiSearchRole 'core/security/role.bicep' = if (!empty(principalId)) {
   params: {
     principalId: principalId
     roleDefinitionId: '8ebe5a00-799e-43f5-93ac-243d3dce84a7' //Search Index Data Contributor
-    principalType: 'User'
+    principalType: principalType
   }
 }
 
@@ -276,7 +284,7 @@ module userCosmosRoleContributor 'core/security/role.bicep' = if (!empty(princip
   params: {
     principalId: principalId
     roleDefinitionId: '7ca78c08-252a-4471-8644-bb5ff32d4ba0' //Search Service Contributor
-    principalType: 'User'
+    principalType: principalType
   }
 }
 
@@ -286,7 +294,7 @@ module openaiRoleUser 'core/security/role.bicep' = if (!empty(principalId)) {
   params: {
     principalId: principalId
     roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd' //Cognitive Services OpenAI User
-    principalType: 'User'
+    principalType: principalType
   }
 }
 
