@@ -48,9 +48,9 @@ This sample uses the [Azure AI](https://azure.microsoft.com/solutions/ai/). It l
 **Contoso Chat .NET** shows you how to:
 
 1. Build a retail copilot application using the **RAG pattern**.
-2. Ideate & iterate on application using **Semantic Kernel** and **Prompty**.
+2. Ideate & iterate on application using [**Semantic Kernel**](https://learn.microsoft.com/en-us/semantic-kernel/overview/?tabs=Csharp) and **Prompty**.
 3. Build & manage the solution using the **Azure AI platform & tools**.
-4. Provision & deploy the solution using the **Azure Developer CLI**.
+4. Provision & deploy the solution using the [**Azure Developer CLI**](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview).
 5. Support **Responsible AI** practices with evaluation & content safety.
 
 ![Contoso Chat Application UI](./data/images/00-app-scenario-ai.png)
@@ -82,6 +82,10 @@ The sample is also a signature application for demonstrating new the capabilitie
     - Ability to deploy these models - `gpt-35-turbo`, `gpt-4`, `text-embeddings-ada-002`
     - We recommend using Sweden Central or East US 2
 - **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
+    - We recommend using East US 2    
+- **Ability to provision Azure Monitor (Free tier)**
+- **Ability to deploy to Azure Container Apps (Free tier)**
+
 
 ## Quickstart
 
@@ -98,6 +102,8 @@ You can estimate the cost of this project's architecture with [Azure's pricing c
 - Azure OpenAI - Standard tier, GPT-4, GPT-35-turbo and Ada models.  [See Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/)
 - Azure AI Search - Basic tier, Semantic Ranker enabled [See Pricing](https://azure.microsoft.com/en-us/pricing/details/search/)
 - Azure Cosmos DB for NoSQL - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/cosmos-db/autoscale-provisioned/#pricing)
+- Azure Monitor - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/monitor/)
+- Azure Container Apps - Severless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/container-apps/)
 
 # Security Guidelines
 
