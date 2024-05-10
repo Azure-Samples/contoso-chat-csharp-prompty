@@ -64,6 +64,9 @@ The project comes with:
 - Sample **application code** for copilot chat and evaluation functions
 - Sample **azd-template configuration** for managing application on Azure
 
+*This sample does not come with a front-end we recommend integrating it with the following front-end template:* 
+- [https://github.com/Azure-Samples/web-openai-swa-frontend](https://github.com/Azure-Samples/web-openai-swa-frontend)
+
 The sample is also a signature application for demonstrating new the capabilities of the Azure AI platform. Expect regular updates to showcase cutting-edge features and best practices for generative AI development. 
 
 ## Architecture Diagram
