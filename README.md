@@ -75,7 +75,7 @@ Planned updates include support for:
 
 
 ## Architecture Diagram
-![Architecture Diagram](.data/images/architecture-diagram-contoso-dotnet.png)
+![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
 
 # Getting Started
 
