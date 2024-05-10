@@ -41,7 +41,7 @@ In this sample, we present **Contoso Outdoors**, a conceptual store specializing
 
 Artificial Intelligence integrates into the customer service experience, offering responses that are not only relevant but also personalized, drawing from the extensive product catalog and individual customer purchase histories.
 
-For our web application, we are using **.NET Stack**, **Blazor**, and **AZD**, for an easy and quick deploy.
+For our web application, we are using **.NET Stack**, and **AZD**, for an easy and quick deploy.
 
 This sample uses the [Azure AI](https://azure.microsoft.com/solutions/ai/). It leverages **Azure OpenAI** to our chat features and **Semantic Kernel** to manage and insert the prompt into our code, and to evaluate prompt/LLM performance.
 
@@ -59,37 +59,27 @@ This sample uses the [Azure AI](https://azure.microsoft.com/solutions/ai/). It l
 
 The project comes with:
 
-- Sample **model configurations** and **evaluation prompts** for a RAG-based copilot application
+- Sample **model configurations**, **evaluation prompts**, and **Prompty** assets (to simplify prompt creation & iteration) for a RAG-based copilot application
 - Sample **product and customer data** for retail application scenario
 - Sample **application code** for copilot chat and evaluation functions
 - Sample **azd-template configuration** for managing application on Azure
 
 The sample is also a signature application for demonstrating new the capabilities of the Azure AI platform. Expect regular updates to showcase cutting-edge features and best practices for generative AI development. 
 
-Planned updates include support for:
-
-- New **Prompty assets** (to simplify prompt creation & iteration)
-- New **azd ai.endpoint host type** (to configure AI deployments in Azure)
-
-## Prompty
-
-
 ## Architecture Diagram
 ![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
 
 # Getting Started
 
-
-
 ## Prerequisites
 
 - **Azure Subscription** - [Signup for a free account.](https://azure.microsoft.com/free/)
-- **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
 - **Install [azd](https://aka.ms/install-azd)**
     - Windows: `winget install microsoft.azd`
     - Linux: `curl -fsSL https://aka.ms/install-azd.sh | bash`
     - MacOS: `brew tap azure/azd && brew install azd`
-- **Azure OpenAi** -  Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly
+- **Azure OpenAI** -  [Learn about getting access](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/limited-access), check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability), and select a region during deployment accordingly
+    - Ability to deploy these models - `gpt-35-turbo`, `gpt-4`, `text-embeddings-ada-002`
     - We recommend using Sweden Central or East US 2
 - **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
 
