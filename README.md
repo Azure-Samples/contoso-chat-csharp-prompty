@@ -41,16 +41,16 @@ In this sample, we present **Contoso Outdoors**, a conceptual store specializing
 
 Artificial Intelligence integrates into the customer service experience, offering responses that are not only relevant but also personalized, drawing from the extensive product catalog and individual customer purchase histories.
 
-For our web application, we are using **.NET Stack**, **Blazor**, and **AZD**, for an easy and quick deploy.
+For our web application, we are using **.NET Stack**, and **AZD**, for an easy and quick deploy.
 
 This sample uses the [Azure AI](https://azure.microsoft.com/solutions/ai/). It leverages **Azure OpenAI** to our chat features and **Semantic Kernel** to manage and insert the prompt into our code, and to evaluate prompt/LLM performance.
 
 **Contoso Chat .NET** shows you how to:
 
 1. Build a retail copilot application using the **RAG pattern**.
-2. Ideate & iterate on application using **Semantic Kernel** and **Prompty**.
+2. Ideate & iterate on application using [**Semantic Kernel**](https://learn.microsoft.com/en-us/semantic-kernel/overview/?tabs=Csharp) and **Prompty**.
 3. Build & manage the solution using the **Azure AI platform & tools**.
-4. Provision & deploy the solution using the **Azure Developer CLI**.
+4. Provision & deploy the solution using the [**Azure Developer CLI**](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview).
 5. Support **Responsible AI** practices with evaluation & content safety.
 
 ![Contoso Chat Application UI](./data/images/00-app-scenario-ai.png)
@@ -59,45 +59,42 @@ This sample uses the [Azure AI](https://azure.microsoft.com/solutions/ai/). It l
 
 The project comes with:
 
-- Sample **model configurations** and **evaluation prompts** for a RAG-based copilot application
+- Sample **model configurations**, **evaluation prompts**, and **Prompty** assets (to simplify prompt creation & iteration) for a RAG-based copilot application
 - Sample **product and customer data** for retail application scenario
 - Sample **application code** for copilot chat and evaluation functions
 - Sample **azd-template configuration** for managing application on Azure
 
+*This sample does not come with a front-end we recommend integrating it with the following front-end template:* 
+- [https://github.com/Azure-Samples/web-openai-swa-frontend](https://github.com/Azure-Samples/web-openai-swa-frontend)
+
 The sample is also a signature application for demonstrating new the capabilities of the Azure AI platform. Expect regular updates to showcase cutting-edge features and best practices for generative AI development. 
 
-Planned updates include support for:
-
-- New **Prompty assets** (to simplify prompt creation & iteration)
-- New **azd ai.endpoint host type** (to configure AI deployments in Azure)
-
-## Prompty
-
-
 ## Architecture Diagram
-![Architecture Diagram](.data/images/architecture-diagram-contoso-dotnet.png)
+![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
 
 # Getting Started
-
-
 
 ## Prerequisites
 
 - **Azure Subscription** - [Signup for a free account.](https://azure.microsoft.com/free/)
-- **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
 - **Install [azd](https://aka.ms/install-azd)**
     - Windows: `winget install microsoft.azd`
     - Linux: `curl -fsSL https://aka.ms/install-azd.sh | bash`
     - MacOS: `brew tap azure/azd && brew install azd`
-- **Azure OpenAi** -  Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly
+- **Azure OpenAI** -  [Learn about getting access](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/limited-access), check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability), and select a region during deployment accordingly
+    - Ability to deploy these models - `gpt-35-turbo`, `gpt-4`, `text-embeddings-ada-002`
     - We recommend using Sweden Central or East US 2
 - **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
+    - We recommend using East US 2    
+- **Ability to provision Azure Monitor (Free tier)**
+- **Ability to deploy to Azure Container Apps (Free tier)**
+
 
 ## Quickstart
 
 
 1. Fork this repo and open on [**Codespaces**](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs)
-    - Or Clone the repsitory or intialize the project: `azd init [name-of-repo]`
+    - Or Clone the repsitory or intialize the project: `azd init Azure-Samples/contoso-chat-csharp-prompty`
 1. Login to Azure using: `az login --use-device-code`
 1. Add credentials to AZD: `azd auth login`
 1. Provision and deploy the project to Azure: `azd up`
@@ -108,6 +105,8 @@ You can estimate the cost of this project's architecture with [Azure's pricing c
 - Azure OpenAI - Standard tier, GPT-4, GPT-35-turbo and Ada models.  [See Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/)
 - Azure AI Search - Basic tier, Semantic Ranker enabled [See Pricing](https://azure.microsoft.com/en-us/pricing/details/search/)
 - Azure Cosmos DB for NoSQL - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/cosmos-db/autoscale-provisioned/#pricing)
+- Azure Monitor - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/monitor/)
+- Azure Container Apps - Severless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/container-apps/)
 
 # Security Guidelines
 
