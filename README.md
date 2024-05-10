@@ -94,7 +94,7 @@ The sample is also a signature application for demonstrating new the capabilitie
 
 
 1. Fork this repo and open on [**Codespaces**](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs)
-    - Or Clone the repsitory or intialize the project: `azd init [name-of-repo]`
+    - Or Clone the repsitory or intialize the project: `azd init Azure-Samples/contoso-chat-csharp-prompty`
 1. Login to Azure using: `az login --use-device-code`
 1. Add credentials to AZD: `azd auth login`
 1. Provision and deploy the project to Azure: `azd up`
