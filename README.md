@@ -75,7 +75,7 @@ Planned updates include support for:
 
 
 ## Architecture Diagram
-Include a diagram describing the application (DevDiv is working with Designers on this part)
+![Architecture Digram](data\images\architecture-diagram-contoso-dotnet.png)
 
 # Getting Started
 
