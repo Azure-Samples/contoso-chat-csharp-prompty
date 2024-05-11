@@ -76,18 +76,27 @@ The sample is also a signature application for demonstrating new the capabilitie
 
 ## Prerequisites
 
-- **Azure Subscription** - [Signup for a free account.](https://azure.microsoft.com/free/)
-- **Install [azd](https://aka.ms/install-azd)**
-    - Windows: `winget install microsoft.azd`
-    - Linux: `curl -fsSL https://aka.ms/install-azd.sh | bash`
-    - MacOS: `brew tap azure/azd && brew install azd`
-- **Azure OpenAI** -  [Learn about getting access](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/limited-access), check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability), and select a region during deployment accordingly
+### Azure Account 
+
+**IMPORTANT:** In order to deploy and run this example, you'll need:
+
+* **Azure account**. If you're new to Azure, [get an Azure account for free](https://azure.microsoft.com/free/cognitive-search/) and you'll get some free Azure credits to get started. See [guide to deploying with the free trial](docs/deploy_lowcost.md).
+* **Azure subscription with access enabled for the Azure OpenAI service**. You can request access with [this form](https://aka.ms/oaiapply). If your access request to Azure OpenAI service doesn't match the [acceptance criteria](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access?context=%2Fazure%2Fcognitive-services%2Fopenai%2Fcontext%2Fcontext), you can use [OpenAI public API](https://platform.openai.com/docs/api-reference/introduction) instead. Learn [how to switch to an OpenAI instance](docs/deploy_existing.md#openaicom-openai).
     - Ability to deploy these models - `gpt-35-turbo`, `gpt-4`, `text-embeddings-ada-002`
     - We recommend using Sweden Central or East US 2
+* **Azure account permissions**:
+  * Your Azure account must have `Microsoft.Authorization/roleAssignments/write` permissions, such as [Role Based Access Control Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview), [User Access Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#user-access-administrator), or [Owner](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#owner). If you don't have subscription-level permissions, you must be granted [RBAC](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview) for an existing resource group and [deploy to that existing group](docs/deploy_existing.md#resource-group).
+  * Your Azure account also needs `Microsoft.Resources/deployments/write` permissions on the subscription level.
 - **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
     - We recommend using East US 2    
 - **Ability to provision Azure Monitor (Free tier)**
 - **Ability to deploy to Azure Container Apps (Free tier)**
+
+### AZD
+- **Install [azd](https://aka.ms/install-azd)**
+    - Windows: `winget install microsoft.azd`
+    - Linux: `curl -fsSL https://aka.ms/install-azd.sh | bash`
+    - MacOS: `brew tap azure/azd && brew install azd`
 
 
 ## Quickstart
