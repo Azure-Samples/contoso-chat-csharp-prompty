@@ -46,7 +46,7 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
     }
 
     // Evaluate the answer using the specified function.
-    public async Task<Dictionary<string, int?>> GetEvaluationAsync(string question, string context, string answer)
+    public async Task<Dictionary<string, string?>> GetEvaluationAsync(string question, object context, object answer)
     {
         _logger.LogInformation("Evaluating result.");
         var groundednessEvaluation = Evaluate(_groudedness, question, context, answer);
@@ -54,7 +54,7 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
         var relevanceEvaluation = Evaluate(_relevance, question, context, answer);
         var fluencyEvaluation = Evaluate(_fluency, question, context, answer);
 
-        var score = new Dictionary<string, int?>
+        var score = new Dictionary<string, string?>
         {
             ["groundedness"] = await groundednessEvaluation,
             ["coherence"] = await coherenceEvaluation,
@@ -67,9 +67,9 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
         return score;
     }
 
-    private Task<int?> Evaluate(KernelFunction func, string question, object context, string? answer)
+    private Task<string?> Evaluate(KernelFunction func, string question, object context, object answer)
     {
-        return func.InvokeAsync<int?>(_kernel, new()
+        return func.InvokeAsync<string?>(_kernel, new()
         {
             { "question", question },
             { "context", context },

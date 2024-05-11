@@ -60,16 +60,19 @@ namespace ContosoChat.Evaluation.Tests
             // GetResponse from chat service
             var result = await _chatService.GetResponseAsync(customerId, question);
             // parse result string varibales of context and answer
-            var response = JsonSerializer.Deserialize<Dictionary<string, string>>(result);
-            var context = response?["context"];
+            var response = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(result);
             var answer = response?["answer"];
+            var context = response?["context"];
+            
 
             //GetEvaluation from chat service
             var score = await _chatService.GetEvaluationAsync(question, context, answer);
-            var coherence = score["coherence"];
-            var groundedness = score["groundedness"];
-            var relevance = score["relevance"];
-            var fluency = score["fluency"];
+
+            var coherence = int.Parse(score["coherence"]);
+            var groundedness = int.Parse(score["groundedness"]);
+            var relevance = int.Parse(score["relevance"]);
+            var fluency = int.Parse(score["fluency"]);
+
 
 
             Assert.Multiple(
