@@ -1,0 +1,33 @@
+name: .NET
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: src/ContosoChatAPI/ContosoChat.Evaluation.Tests
+    - name: Build
+      run: dotnet build --no-restore
+      working-directory: src/ContosoChatAPI/ContosoChat.Evaluation.Tests
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+      env:
+        AZURE_OPENAI_MODEL: ${{ secrets.AZURE_OPENAI_MODEL }}
+        AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+        AZURE_OPENAI_KEY: ${{ secrets.AZURE_OPENAI_KEY }}
+      working-directory: src/ContosoChatAPI/ContosoChat.Evaluation.Tests
