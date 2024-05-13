@@ -21,14 +21,24 @@ param openAiResourceName string = ''
 param openAiResourceGroupName string = ''
 
 @description('Location for the OpenAI resource')
-@allowed([ 'canadaeast', 'eastus', 'eastus2', 'francecentral', 'switzerlandnorth', 'uksouth', 'japaneast', 'northcentralus', 'australiaeast', 'swedencentral' ])
+@allowed([
+  'canadaeast'
+  'eastus'
+  'eastus2'
+  'francecentral'
+  'switzerlandnorth'
+  'uksouth'
+  'japaneast'
+  'northcentralus'
+  'australiaeast'
+  'swedencentral'
+])
 @metadata({
   azd: {
     type: 'location'
   }
 })
 param openAiResourceLocation string
-
 
 @description('The SKU name of the OpenAI resource')
 param openAiSkuName string = ''
@@ -154,9 +164,9 @@ module cosmos 'core/database/cosmos/sql/cosmos-sql-db.bicep' = {
     databaseName: 'contoso-outdoor'
     location: location
     tags: union(tags, {
-        defaultExperience: 'Core (SQL)'
-        'hidden-cosmos-mmspecial': ''
-      })
+      defaultExperience: 'Core (SQL)'
+      'hidden-cosmos-mmspecial': ''
+    })
     containers: [
       {
         name: 'customers'
@@ -328,7 +338,6 @@ output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerApps.outputs.registry
 output AZURE_CONTAINER_REGISTRY_NAME string = containerApps.outputs.registryName
 
 output APPINSIGHTS_CONNECTIONSTRING string = monitoring.outputs.applicationInsightsConnectionString
-
 
 output OpenAI__Type string = 'azure'
 output OpenAI__API_Version string = openAiApiVersion
