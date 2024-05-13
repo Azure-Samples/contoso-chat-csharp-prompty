@@ -67,7 +67,7 @@ The project comes with:
 *This sample does not come with a front-end we recommend integrating it with the following front-end template:* 
 - [https://github.com/Azure-Samples/web-openai-swa-frontend](https://github.com/Azure-Samples/web-openai-swa-frontend)
 
-The sample is also a signature application for demonstrating new the capabilities of the Azure AI platform. Expect regular updates to showcase cutting-edge features and best practices for generative AI development. 
+The sample is also a signature application for demonstrating the new capabilities of the Azure AI platform. Expect regular updates to showcase cutting-edge features and best practices for generative AI development. 
 
 ## Architecture Diagram
 ![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
@@ -103,7 +103,7 @@ The sample is also a signature application for demonstrating new the capabilitie
 
 
 1. Fork this repo and open on [**Codespaces**](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs)
-    - Or Clone the repsitory or intialize the project: `azd init Azure-Samples/contoso-chat-csharp-prompty`
+    - Or Clone the repository or intialize the project: `azd init Azure-Samples/contoso-chat-csharp-prompty`
 1. Login to Azure using: `az login --use-device-code`
 1. Add credentials to AZD: `azd auth login`
 1. Provision and deploy the project to Azure: `azd up`
