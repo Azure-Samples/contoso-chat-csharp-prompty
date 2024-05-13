@@ -39,29 +39,37 @@ public sealed class ChatService(Kernel kernel, ITextEmbeddingGenerationService e
             { "question", question },
         });
 
+
+        _logger.LogInformation("Answer: {Answer}", answer);
+
+        return JsonSerializer.Serialize(new { answer, context });
+    }
+
+    // Evaluate the answer using the specified function.
+    public async Task<Dictionary<string, string?>> GetEvaluationAsync(string question, object context, object answer)
+    {
         _logger.LogInformation("Evaluating result.");
-        var groundedNessEvaluation = Evaluate(_groudedness, question, context, answer);
+        var groundednessEvaluation = Evaluate(_groudedness, question, context, answer);
         var coherenceEvaluation = Evaluate(_coherence, question, context, answer);
         var relevanceEvaluation = Evaluate(_relevance, question, context, answer);
         var fluencyEvaluation = Evaluate(_fluency, question, context, answer);
-        await Task.WhenAll(groundedNessEvaluation, coherenceEvaluation, relevanceEvaluation, fluencyEvaluation);
 
         var score = new Dictionary<string, string?>
         {
-            ["groundedness"] = await groundedNessEvaluation,
+            ["groundedness"] = await groundednessEvaluation,
             ["coherence"] = await coherenceEvaluation,
             ["relevance"] = await relevanceEvaluation,
             ["fluency"] = await fluencyEvaluation,
         };
 
-        _logger.LogInformation("Answer: {Answer}", answer);
+        await Task.WhenAll(groundednessEvaluation, coherenceEvaluation, relevanceEvaluation, fluencyEvaluation);
         _logger.LogInformation("Score: {Score}", score);
-        return JsonSerializer.Serialize(new { answer, score });
+        return score;
     }
 
-    private Task<string?> Evaluate(KernelFunction func, string question, object context, string? answer)
+    private Task<string?> Evaluate(KernelFunction func, string question, object context, object answer)
     {
-        return func.InvokeAsync<string>(_kernel, new()
+        return func.InvokeAsync<string?>(_kernel, new()
         {
             { "question", question },
             { "context", context },

@@ -33,6 +33,9 @@
     <None Update="chat.prompty">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="chat.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Evaluations\coherence.prompty">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -43,9 +46,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Evaluations\relevance.prompty">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="chat.prompty">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
