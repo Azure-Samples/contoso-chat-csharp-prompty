@@ -234,6 +234,8 @@ Visit the [azd reference](https://learn.microsoft.com/azure/developer/azure-deve
     ```bash
     azd up
     ```
+- You will be prompted for the subscription you want you use and the region. The bicep parameters declare two location fields: the first one is the primary location for all resources, the second is a location field specifically for where the OpenAI resource should be created.
+
 - On completion, it automatically invokes a`postprovision.sh` script that will attempt to log you into Azure. You may see something like this. Just follow the provided instructions to complete the authentication flow.
     ```bash
     No Azure user signed in. Please login.
@@ -333,14 +335,13 @@ You can estimate the cost of this project's architecture with [Azure's pricing c
 - Azure Container Apps - Severless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/container-apps/)
 
 
-
 # Security Guidelines
 
-Each template has either [Managed Identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview) or Key Vault built in to eliminate the need for developers to manage these credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials. 
+This template uses [Managed Identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview) and Key Vault to eliminate the need for developers to manage credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials.
 
 Additionally, we have added a [GitHub Action tool](https://github.com/microsoft/security-devops-action) that scans the infrastructure-as-code files and generates a report containing any detected issues. 
 
-To ensure best practices in your repo we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
+To ensure best security practices in your repo, we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
 
 # Resources
 
