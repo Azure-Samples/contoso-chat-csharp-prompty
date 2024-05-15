@@ -302,7 +302,7 @@ To the Swagger endpoint, use the application on ``http://localhost:5282/swagger/
 - Post to the api endpoint with the `customerId` and `question`
 
 ```
-curl --header "Content-Type: application/json" \
+curl -v --header "Content-Type: application/json" \
   --request POST \
   --data '{"customerId":"3","question":"Tell me about your jackets?"}' \
   http://<aca-url>/ContosoChat
