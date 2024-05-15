@@ -299,12 +299,12 @@ To the Swagger endpoint, use the application on ``http://localhost:5282/swagger/
 
 ## 4. Hit the Deployed API
 - Navigate to Azure portal and get the endpoint from Azure Container Apps deployment
-- Post to the api endpoing with the `customerId` and `customerId`
+- Post to the api endpoint with the `customerId` and `question`
 
 ```
 curl --header "Content-Type: application/json" \
   --request POST \
-  --data '{"customerId":"3","customerId":"Tell me about your jackets?"}' \
+  --data '{"customerId":"3","question":"Tell me about your jackets?"}' \
   http://<aca-url>/ContosoChat
 ```
 
