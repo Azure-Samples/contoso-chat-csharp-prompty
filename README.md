@@ -297,33 +297,16 @@ After this, we need to restore our dotNet packages to build our solution, we can
 
 To the Swagger endpoint, use the application on ``http://localhost:5282/swagger/``
 
+## 4. Hit the Deployed API
+- Navigate to Azure portal and get the endpoint from Azure Container Apps deployment
+- Post to the api endpoing with the `customerId` and `customerId`
 
-## 4. Deploy with GitHub Actions
-
-### 4.1. Create Connection to Azure in GitHub
-- Login to [Azure Shell](https://shell.azure.com/)
-- Follow the instructions to [create a service principal here](hhttps://github.com/microsoft/llmops-promptflow-template/blob/main/docs/github_workflows_how_to_setup.md#create-azure-service-principal)
-- Follow the [instructions in steps 1 - 8  here](https://github.com/microsoft/llmops-promptflow-template/blob/main/docs/github_workflows_how_to_setup.md#steps) to add create and add the user-assigned managed identity to the subscription and workspace.
-
-- Assign `Data Science Role` and the `Azure Machine Learning Workspace Connection Secrets Reader` to the service principal. Complete this step in the portal under the IAM.
-- Setup authentication with Github [here](https://github.com/microsoft/llmops-promptflow-template/blob/main/docs/github_workflows_how_to_setup.md#set-up-authentication-with-azure-and-github)
-
-```bash
-{
-  "clientId": <GUID>,
-  "clientSecret": <GUID>,
-  "subscriptionId": <GUID>,
-  "tenantId": <GUID>
-}
 ```
-- Add `SUBSCRIPTION` (this is the subscription) , `GROUP` (this is the resource group name), `WORKSPACE` (this is the project name), and `KEY_VAULT_NAME` to GitHub.
-
-### 4.2. Create a custom environment for endpoint
-- Follow the instructions to create a custom env with the packages needed [here](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-environments-in-studio?view=azureml-api-2#create-an-environment)
-  - Select the `upload existing docker` option 
-  - Upload from the folder `runtime\docker`
-
-- Update the deployment.yml image to the newly created environemnt. You can find the name under `Azure container registry` in the environment details page.
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"customerId":"3","customerId":"Tell me about your jackets?"}' \
+  http://<aca-url>/ContosoChat
+```
 
 ## Costs
 You can estimate the cost of this project's architecture with [Azure's pricing calculator](https://azure.microsoft.com/pricing/calculator/)
