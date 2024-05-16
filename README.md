@@ -27,10 +27,20 @@ Samples in JavaScript, Python, and Java. Learn more at https://aka.ms/azai.
 - [Features](#features)
 - [Architecture Diagram](#architecture-diagram)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Quickstart](#quickstart)
+    - [Quickstart with Codespaces](#quickstart-with-codespaces)
+- [Prerequisites](#prerequisites)
+    - [Azure Account](#azure-account)
+    - [AZD](#azd)
+- [Deploy](#deploy)
+    - [Development Enviroment](#step-1-development-environment)
+    - [Create Azure Resources](#2-create-azure-resources)
+    - [Running the Application](#3-running-the-application)
+- [Hit the API](#4-hit-the-deployed-api)
+- [Costs](#costs)
 - [Security Guidelines](#security-guidelines)
 - [Resources](#resources)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
 
 [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
 [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/chat-rag-openai-csharp-prompty) 
@@ -53,7 +63,7 @@ This sample uses the [Azure AI](https://azure.microsoft.com/solutions/ai/). It l
 4. Provision & deploy the solution using the [**Azure Developer CLI**](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview).
 5. Support **Responsible AI** practices with evaluation & content safety.
 
-![Contoso Chat Application UI](./data/images/00-app-scenario-ai.png)
+
 
 # Features
 
@@ -70,6 +80,23 @@ The sample is also a signature application for demonstrating the new capabilitie
 ![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
 
 # Getting Started
+
+## Quickstart with Codespaces
+
+**The recommended option!**
+
+1. Fork the repo into your personal profile.
+1. In your fork, click the green Code button on the repository
+1. Select the ``Codespaces`` tab and click ``Create codespace...`` 
+
+    - You can also click this button: [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
+
+1. This should open a new browser tab with a Codespaces container setup process running. 
+1. On completion, this will launch a Visual Studio Code editor in the browser, with all relevant dependencies already installed in the running development container beneath. 
+
+*Congratulations!* Your cloud dev environment is **ready**!
+
+Once you've launched Codespaces you can proceed to [Deploy in Step 2](#2-create-azure-resources).
 
 ## Prerequisites
 
@@ -95,7 +122,6 @@ The sample is also a signature application for demonstrating the new capabilitie
     - Linux: `curl -fsSL https://aka.ms/install-azd.sh | bash`
     - MacOS: `brew tap azure/azd && brew install azd`
 
-
 ## Deploy
 
 ### Step 1: Development Environment
@@ -104,7 +130,7 @@ The repository is instrumented with a devcontainer.json configuration that can p
 
 Pick one!
 
-- Pre-built environment, in cloud with GitHub Codespaces
+- Pre-built environment, in cloud with GitHub Codespaces, described in the [Quickstart](#quickstart-with-codespaces).
 - Pre-built environment, on device with Docker Desktop
 - Manual setup environment, on device with .NET and NuGet installed
 
@@ -113,24 +139,7 @@ The third approach will require you to manually update or maintain your local en
 
 To setup the development environment you can leverage either GitHub Codespaces, a local .NET with NuGet environment (using Anaconda or venv), or a VS Code Dev Container environment (using Docker).
 
-#### Step 1.1: Pre-Built Environment, in cloud (GitHub Codespaces)
-
-**The recommended option!**
-
-1. Fork the repo into your personal profile.
-1. In your fork, click the green Code button on the repository
-1. Select the ``Codespaces`` tab and click ``Create codespace...`` 
-
-    - You can also click this button: [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
-
-1. This should open a new browser tab with a Codespaces container setup process running. 
-1. On completion, this will launch a Visual Studio Code editor in the browser, with all relevant dependencies already installed in the running development container beneath. 
-
-*Congratulations!* Your cloud dev environment is **ready**!
-
-Once you've launched Codespaces you can proceed to [step 2]().
-
-#### Step 1.2: Pre-Built Environment, in cloud (GitHub Codespaces)
+#### Step 1.1: Pre-Built Environment, in cloud (Docker)
 
 This option uses the same ``devcontainer.json`` configuration, but launches the development container in your local device using Docker Desktop. 
 
@@ -151,9 +160,9 @@ Once your project launches in the local Docker desktop container, you should see
 
 Congratulations! Your local dev environment is ready!
 
-Once you've launched your docker container environment you can proceed to [step 2]().
+Once you've launched your docker container environment you can proceed to [step 2](#2-create-azure-resources).
 
-#### Step 1.3: Manual Setup Environment on device
+#### Step 1.2: Manual Setup Environment on device
 
 In order to run this sample locally you will need to: 
 
@@ -234,15 +243,15 @@ Visit the [azd reference](https://learn.microsoft.com/azure/developer/azure-deve
     ```bash
     azd up
     ```
-- You will be prompted for the subscription you want you use and the region. The bicep parameters declare two location fields: the first one is the primary location for all resources, the second is a location field specifically for where the OpenAI resource should be created.
+- After this, you will be prompted for the subscription you want you use and the region. The bicep parameters declare two location fields: the first one is the primary location for all resources, the second is a location field specifically for where the OpenAI resource should be created.
 
-- On completion, it automatically invokes a`postprovision.sh` script that will attempt to log you into Azure. You may see something like this. Just follow the provided instructions to complete the authentication flow.
+- On completion, it automatically invokes a `postprovision.sh` script, that will be located in the `infra/hooks` folder. This will attempt to log you into Azure. You may see something like this. Just follow the provided instructions to complete the authentication flow.
     ```bash
     No Azure user signed in. Please login.
     ```
 - Once logged in, the script will do the following for you:
-    - Download `config.json` to the local device
-    - Populate `.env` with required environment variables
+    - Create the `.azure/<env>/config.json` in the local device
+    - Populate `.azure/<env>/.env` with required environment variables
     - Populate your data (in Azure AI Search, Azure CosmosDB)
     - Create relevant Connections (for prompt flow)
     - Upload your prompt flow to Azure (for deployment)
@@ -263,21 +272,9 @@ The script will set up an **Azure AI Studio** project with the following model d
  - text-embeddings-ada-002
  - gpt-4
 
-The Azure AI Search resource will have **Semantic Ranker** enabled for this project, which requires the use of a paid tier of that service. It may also be created in a different region, based on availability of that feature.
+The Azure AI Search resource will have **Semantic Ranker** enabled for this project, which requires the use of a paid tier of that service. It may also be created in a different region, based on [availability of that feature](https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?products=search).
 
-### 2.3 Verify `config.json` setup
-
-The script should automatically create a `config.json` in your root directory, with the relevant Azure subscription, resource group, and AI workspace properties defined. _These will be made use of by the Azure AI SDK for relevant API interactions with the Azure AI platform later_.
-
-If the config.json file is not created, simply download it from your Azure portal by visiting the _Azure AI project_ resource created, and looking at its Overview page.
-
-### 2.4 Verify `.env` setup
-
-The default sample has an `.env.sample` file that shows the relevant environment variables that need to be configured in this project. The script should create a `.env` file that has these same variables _but populated with the right values_ for your Azure resources.
-
-If the file is not created, simply copy over `.env.sample` to `.env` - then populate those values manually from the respective Azure resource pages using the Azure Portal (for Azure CosmosDB and Azure AI Search) and the Azure AI Studio (for the Azure OpenAI values)
-
-### 2.5 Add endpoints to the .NET Application
+### 2.3 Add endpoints to the .NET Application
 
 The project now needs to have access to Azure, to do this, go to ``.\src\ContosoChatAPI\ContosoChatAPI\appsettings.json`` and change the following variables. Use the ``\.azure\<env-name>\.env`` for your endpoints.
 
@@ -287,15 +284,37 @@ The project now needs to have access to Azure, to do this, go to ``.\src\Contoso
 - CosmosDb__Endpoint -> ``CosmosDb -> Endpoint``
 - AzureAISearch__Endpoint -> ``AzureAISearch -> Endpoint``
 
-## 3. Running Locally
+## 3. Running the application
 
-First, you will need to navegate in the console to our folder in ContosoChat, use the following  ``cd .src\ContosoChatAPI\``.
+First, you will need to navegate in the console to our folder in ContosoChat, use the following  ``cd .\src\ContosoChatAPI\``.
 
 After this, we need to restore our dotNet packages to build our solution, we can use ``dotnet restore``. To build our ``.dll`` from solution, use ``dotnet build``, it will report two dlls being created, the test and the main one.
 
  To execute our solution use ``dotnet run --project .\ContosoChatAPI\ContosoChatAPI.csproj``. This will run our solution, which will make available our API to test and connect from our data collection located in ``chat.json``.
 
-To the Swagger endpoint, use the application on ``http://localhost:5282/swagger/``
+To the Swagger endpoint, use the application on ``http://localhost:5282/swagger/``. For codespaces, take the URL and add the `/swagger/` to it.
+
+## 3.1 Using the aplication with Swagger
+
+When opening the page to Swagger, you may look on the following page.
+
+![Swagger Web Page](./data/images/swagger-contoso-chat.png)
+
+Click on `Try it out`, then, test with the following parameters:
+
+    - customerId: `3`
+    - question: `Can what can you tell me about the jackets?`
+
+After seding the information, will send with the RAG pattern to Azure, which sends the client information, the question and some store data. Getting back a answer to the chat. An example of it, can be: 
+
+```
+Answer: Sure, Michael! Let me tell you about our jackets. One of our popular jackets is the Summit Breeze Jacket (catalog id 23). It's a lightweight and windproof jacket with a water-resistant fabric. It's perfect for outdoor adventures and comes in a sleek black color. 🌬️🧥
+
+If you're interested in jackets, you might also like the TrailWalker Hiking Shoes (catalog id 5) for a complete outdoor outfit. These shoes are rugged, waterproof, and provide excellent grip. They will keep your feet comfortable and protected during your hikes. 👟🏔️
+
+Let me know if you need any more information!
+```
+
 
 ## 4. Hit the Deployed API
 - Navigate to Azure portal and get the endpoint from Azure Container Apps deployment
