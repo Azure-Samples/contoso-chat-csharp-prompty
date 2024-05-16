@@ -25,7 +25,7 @@ Samples in JavaScript, Python, and Java. Learn more at https://aka.ms/azai.
 
 - [What is this sample?](#what-is-this-sample)
 - [Features](#features)
-- [Archtechture Diagram](#architecture-diagram)
+- [Architecture Diagram](#architecture-diagram)
 - [Getting Started](#getting-started)
     - [Quickstart with Codespaces](#quickstart-with-codespaces)
 - [Prerequisites](#prerequisites)
