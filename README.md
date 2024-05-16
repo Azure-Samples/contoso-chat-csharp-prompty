@@ -286,7 +286,7 @@ The project now needs to have access to Azure, to do this, go to ``.\src\Contoso
 
 ## 3. Running the application
 
-First, you will need to navegate in the console to our folder in ContosoChat, use the following  ``cd .src\ContosoChatAPI\``.
+First, you will need to navegate in the console to our folder in ContosoChat, use the following  ``cd .\src\ContosoChatAPI\``.
 
 After this, we need to restore our dotNet packages to build our solution, we can use ``dotnet restore``. To build our ``.dll`` from solution, use ``dotnet build``, it will report two dlls being created, the test and the main one.
 
