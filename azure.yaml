@@ -12,7 +12,7 @@ hooks:
       shell: sh
       continueOnError: false
       interactive: true
-      run: infra/hooks/postprovision.sh
+      run: chmod +x infra/hooks/postprovision.sh
     windows:
       shell: pwsh
       continueOnError: false
