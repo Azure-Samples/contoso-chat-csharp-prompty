@@ -1,3 +1,20 @@
+---
+name: Contoso Chat Retail with .NET and Semantic Kernel
+description: A front store with AI integration and chat features in the Cloud
+languages:
+- DotNet
+- bicep
+- azdeveloper
+- Prompty
+products:
+- azure-openai
+- azure-cognitive-search
+- azure-app-service
+- azure
+page_type: sample
+urlFragment: contoso-chat-csharp-prompty
+---
+
 # Contoso Chat Retail with .NET and Semantic Kernel
 
 Samples in JavaScript, Python, and Java. Learn more at https://aka.ms/azai.
@@ -60,7 +77,7 @@ The project comes with:
 The sample is also a signature application for demonstrating the new capabilities of the Azure AI platform. Expect regular updates to showcase cutting-edge features and best practices for generative AI development. 
 
 ## Architecture Diagram
-![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
+![Architecture Diagram](../data/images/architecture-diagram-contoso-dotnet.png)
 
 # Getting Started
 
@@ -281,7 +298,7 @@ To the Swagger endpoint, use the application on ``http://localhost:5282/swagger/
 
 When opening the page to Swagger, you may look on the following page.
 
-![Swagger Web Page](./data/images/swagger-contoso-chat.png)
+![Swagger Web Page](../data/images/swagger-contoso-chat.png)
 
 Click on `Try it out`, then, test with the following parameters:
 
