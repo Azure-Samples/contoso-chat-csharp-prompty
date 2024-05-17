@@ -1,6 +1,23 @@
+---
+name: Contoso Chat Retail with .NET and Semantic Kernel
+description: A front store with AI integration and chat features in the Cloud
+languages:
+- DotNet
+- bicep
+- azdeveloper
+- Prompty
+products:
+- azure-openai
+- azure-cognitive-search
+- azure-app-service
+- azure
+page_type: sample
+urlFragment: contoso-chat-csharp-prompty
+---
+
 # Contoso Chat Retail with .NET and Semantic Kernel
 
-This sample demonstrates how to build, evaluate, and deploy, a retail copilot application end-to-end using Azure AI and Cosmos DB. It's built using .NET with the Semantic Kernel library and Prompty prompt files.
+Samples in JavaScript, Python, and Java. Learn more at https://aka.ms/azai.
 
 ---
 
@@ -18,7 +35,7 @@ This sample demonstrates how to build, evaluate, and deploy, a retail copilot ap
     - [Development Enviroment](#step-1-development-environment)
     - [Create Azure Resources](#2-create-azure-resources)
     - [Running the Application](#3-running-the-application)
-- [Calling the API deployed in Azure](#4-hit-the-deployed-api)
+- [Hit the API](#4-hit-the-deployed-api)
 - [Costs](#costs)
 - [Security Guidelines](#security-guidelines)
 - [Resources](#resources)
@@ -30,66 +47,76 @@ This sample demonstrates how to build, evaluate, and deploy, a retail copilot ap
 
 # What is this sample?
 
-In this sample, we present **Contoso Outdoors**, a conceptual store specializing in outdoor gear for hiking and camping enthusiasts. This virtual store enhances customer engagement and sales support through an intelligent chat agent. Artificial Intelligence is used to integrate into the customer service experience, offering responses that are not only relevant but also personalized, drawing from an extensive product catalog and individual customer purchase histories.
+In this sample, we present **Contoso Outdoors**, a conceptual store specializing in outdoor gear for hiking and camping enthusiasts. This virtual store enhances customer engagement and sales support through an intelligent chat agent. This agent is powered by the **Retrieval Augmented Generation (RAG)** pattern within the **Microsoft Azure AI Stack**, enriched with **Semantic Kernel** and **Prompty** support.
 
-The sample uses the following Azure technologies:
-- [Azure AI Search](https://learn.microsoft.com/azure/search/) to create and manage search indexes for product catalog data.
-- [Azure Cosmos DB](https://learn.microsoft.com/azure/cosmos-db/) to store and manage customer purchase history data.
-- [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/) to deploy and manage key models for our copilot workflow.
-    - `text-embeddings-ada-002` for vectorizing user queries.
-    - `gpt-35-turbo` for generating chat responses.
+Artificial Intelligence integrates into the customer service experience, offering responses that are not only relevant but also personalized, drawing from the extensive product catalog and individual customer purchase histories.
 
-It exposes a REST endpoint that can be called to interact with the chat agent and is implemented using:
-- [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/?tabs=Csharp) to access AI models, work with data stores, integrate prompts, and evaluate prompt/LLM performance.
-- **Prompty** to simplify prompt creation & iteration for this copilot scenario.
-- **ASP.NET Core WebAPI** to expose REST endpoints.
+For our web application, we are using **.NET Stack**, and **AZD**, for an easy and quick deploy.
 
-By exploring and deploying this sample, you will learn to:
+This sample uses the [Azure AI](https://azure.microsoft.com/solutions/ai/). It leverages **Azure OpenAI** to our chat features and **Semantic Kernel** to manage and insert the prompt into our code, and to evaluate prompt/LLM performance.
+
+**Contoso Chat .NET** shows you how to:
 
 1. Build a retail copilot application using the **RAG pattern**.
-2. Ideate & iterate on application using [**Semantic Kernel**]() and **Prompty**.
+2. Ideate & iterate on application using [**Semantic Kernel**](https://learn.microsoft.com/en-us/semantic-kernel/overview/?tabs=Csharp) and **Prompty**.
 3. Build & manage the solution using the **Azure AI platform & tools**.
 4. Provision & deploy the solution using the [**Azure Developer CLI**](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview).
 5. Support **Responsible AI** practices with evaluation & content safety.
+
+
 
 # Features
 
 The project comes with:
 
-* **Sample model configurations, chat and evaluation prompts** for a RAG-based copilot app.
-* **Prompty assets** to simplify prompt creation & iteration for this copilot scenario.
-* Sample **product and customer data** for retail application scenario
-* Sample **application code** for copilot chat and evaluation workflows.
-* Sample **azd-template configuration** for managing application on Azure
-* **Managed Identity** configuration as a best practice for managing sensitive credentials.
+- Sample **model configurations**, **evaluation prompts**, and **Prompty** assets (to simplify prompt creation & iteration) for a RAG-based copilot application
+- Sample **product and customer data** for retail application scenario
+- Sample **application code** for copilot chat and evaluation functions
+- Sample **azd-template configuration** for managing application on Azure
 
 The sample is also a signature application for demonstrating the new capabilities of the Azure AI platform. Expect regular updates to showcase cutting-edge features and best practices for generative AI development. 
 
 ## Architecture Diagram
-
-The Contoso Chat application implements a _retrieval augmented generation_ pattern to ground the model responses in your data. The architecture diagram below illustrates the key components and services used for implementation and highlights the use of [Azure Managed Identity](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/) to reduce developer complexity in managing sensitive credentials.
-
-![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
+![Architecture Diagram](../data/images/architecture-diagram-contoso-dotnet.png)
 
 # Getting Started
 
-## Pre-requisites
+## Quickstart with Codespaces
 
-- **Azure Subscription** - [Signup for a free account here.](https://azure.microsoft.com/free/)
-- **GitHub Account** - [Signup for a free account here.](https://github.com/signup)
-- **Access to Azure Open AI Services** - [Apply for access here.](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access)
-  - Ability to deploy these models - `gpt-35-turbo`, `text-embeddings-ada-002`
+**The recommended option!**
+
+1. Fork the repo into your personal profile.
+1. In your fork, click the green Code button on the repository
+1. Select the ``Codespaces`` tab and click ``Create codespace...`` 
+
+    - You can also click this button: [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
+
+1. This should open a new browser tab with a Codespaces container setup process running. 
+1. On completion, this will launch a Visual Studio Code editor in the browser, with all relevant dependencies already installed in the running development container beneath. 
+
+*Congratulations!* Your cloud dev environment is **ready**!
+
+Once you've launched Codespaces you can proceed to [Deploy in Step 2](#2-create-azure-resources).
+
+## Prerequisites
+
+### Azure Account 
+
+**IMPORTANT:** In order to deploy and run this example, you'll need:
+
+* **Azure account**. If you're new to Azure, [get an Azure account for free](https://azure.microsoft.com/free/cognitive-search/) and you'll get some free Azure credits to get started. See [guide to deploying with the free trial](docs/deploy_lowcost.md).
+* **Azure subscription with access enabled for the Azure OpenAI service**. You can request access with [this form](https://aka.ms/oaiapply). If your access request to Azure OpenAI service doesn't match the [acceptance criteria](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access?context=%2Fazure%2Fcognitive-services%2Fopenai%2Fcontext%2Fcontext), you can use [OpenAI public API](https://platform.openai.com/docs/api-reference/introduction) instead. Learn [how to switch to an OpenAI instance](docs/deploy_existing.md#openaicom-openai).
+    - Ability to deploy these models - `gpt-35-turbo`, `gpt-4`, `text-embeddings-ada-002`
+    - We recommend using Sweden Central or East US 2
+* **Azure account permissions**:
+  * Your Azure account must have `Microsoft.Authorization/roleAssignments/write` permissions, such as [Role Based Access Control Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview), [User Access Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#user-access-administrator), or [Owner](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#owner). If you don't have subscription-level permissions, you must be granted [RBAC](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview) for an existing resource group and [deploy to that existing group](docs/deploy_existing.md#resource-group).
+  * Your Azure account also needs `Microsoft.Resources/deployments/write` permissions on the subscription level.
 - **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
+    - We recommend using East US 2    
+- **Ability to provision Azure Monitor (Free tier)**
+- **Ability to deploy to Azure Container Apps (Free tier)**
 
-You will also need to validate the following requirements:
- - Access to [semantic ranker feature](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?products=search) for your search service tier and deployment region.
- - Access to [sufficient Azure OpenAI quota](https://learn.microsoft.com/azure/ai-services/openai/quotas-limits) for your selected models and deployment region.
- - Ability to provision Azure Monitor (Free tier)
- - Ability to deploy to Azure Container Apps (Free tier)
-   
-
-### Applications to install for local development (Optional)
-- **Visual Studio Code** - [Download it for free here.](https://code.visualstudio.com/download)
+### AZD
 - **Install [azd](https://aka.ms/install-azd)**
     - Windows: `winget install microsoft.azd`
     - Linux: `curl -fsSL https://aka.ms/install-azd.sh | bash`
@@ -105,28 +132,14 @@ Pick one!
 
 - Pre-built environment, in cloud with GitHub Codespaces, described in the [Quickstart](#quickstart-with-codespaces).
 - Pre-built environment, on device with Docker Desktop
-- Manually setup environment, on device with .NET and NuGet installed
+- Manual setup environment, on device with .NET and NuGet installed
 
 The first approach is recommended for minimal user effort in startup and maintenance. 
 The third approach will require you to manually update or maintain your local environment, to reflect any future updates to the repo.
 
-#### 1.1: Quickstart with Codespaces
+To setup the development environment you can leverage either GitHub Codespaces, a local .NET with NuGet environment (using Anaconda or venv), or a VS Code Dev Container environment (using Docker).
 
-**The recommended option!**
-
-1. Click the green Code button on this repository.
-1. Select the ``Codespaces`` tab and click ``Create codespace...`` 
-
-    - You can also click this button: [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
-
-1. This should open a new browser tab with a Codespaces container setup process running. 
-1. On completion, this will launch a Visual Studio Code editor in the browser, with all relevant dependencies already installed in the running development container beneath. 
-
-*Congratulations!* Your cloud dev environment is **ready**!
-
-Once you've launched Codespaces you can proceed to [Deploy in Step 2](#2-create-azure-resources).
-
-#### 1.2: Pre-Built Environment, in cloud (Docker)
+#### Step 1.1: Pre-Built Environment, in cloud (Docker)
 
 This option uses the same ``devcontainer.json`` configuration, but launches the development container in your local device using Docker Desktop. 
 
@@ -149,17 +162,19 @@ Congratulations! Your local dev environment is ready!
 
 Once you've launched your docker container environment you can proceed to [step 2](#2-create-azure-resources).
 
-#### Step 1.3: Manually Setup Environment on device
+#### Step 1.2: Manual Setup Environment on device
 
 In order to run this sample locally you will need to: 
 
-1. Clone this sample locally: 
+If all of the above are correctly installed you can set up your local developer environment as follows. 
+
+1. First, fork the repo, and then clone the code sample locally: 
 
    ``` bash
    git clone https://github.com/Azure-Samples/chat-rag-openai-csharp-prompty.git
    ```
 
-1. Open the repo in VS Code and navigate to the src directory
+1. Open the repo in VS Code and navgate to the src directory
 
    ```bash
    cd 
@@ -178,7 +193,7 @@ In order to run this sample locally you will need to:
 
 ## 2. Create Azure resources
 
-We setup our development ennvironment in the previous step. In this step, we'll **provision Azure resources** for our project so they're ready to use for developing our LLM Application.
+We setup our development ennvironment in the previous step. In this step, we'll **provision Azure resources** for our project, ready to use for developing our LLM Application.
 
 
 ### 2.1 Authenticate with Azure
@@ -188,7 +203,7 @@ Start by connecting your Visual Studio Code environment to your Azure account:
 1. Open the terminal in VS Code and use command `az login`. 
 2. Complete the authentication flow. 
 
-**If you are running within Codespaces, use these instructions to login instead:**
+**If you are running within a dev container, use these instructions to login instead:**
  1. Open the terminal in VS Code and use command `az login --use-device-code`
  2. The console message will give you an alphanumeric code
  3. Navigate to _https://microsoft.com/devicelogin_ in a new tab
@@ -203,7 +218,7 @@ In either case, verify that the console shows a message indicating a successful 
 
 ### 2.2 Provision with Azure Developer CLI
 
-For this project, we need to provision multiple Azure resources in a specific order; we'll use the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview) (or `azd`) to do this, following the steps below.
+For this project, we need to provision multiple Azure resources in a specific order. **Before**, we achieved this by running the `provision.sh` script. **Now**, we'll use the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview) (or `azd`) instead, and follow the steps below.
 Visit the [azd reference](https://learn.microsoft.com/azure/developer/azure-developer-cli/reference) for more details on tool syntax, commands and options.
 
 #### 2.2.1 Install `azd`
@@ -224,13 +239,11 @@ Visit the [azd reference](https://learn.microsoft.com/azure/developer/azure-deve
 
 #### 2.2.3 Provision and Deploy 
 
-- Run the following command to provision all resources. Note: This will take awhile to complete, usually around 10-15 minutes.
+- Run this unified command to provision all resources. This will take a non-trivial amount of time to complete.
     ```bash
     azd up
     ```
-- During provisioning, you will be prompted for the Azure subscription you want you use and the region. You will be prompted for two different region selections: the first one is the primary location for all resources, the second is a location field specifically for where the OpenAI resource should be created.
-  - At this time, we recommend using Sweden Central or East US 2 regions for OpenAI resources.
-  - For Azure AI Search we recommend using the East US region, due to limited regional availability currently.
+- After this, you will be prompted for the subscription you want you use and the region. The bicep parameters declare two location fields: the first one is the primary location for all resources, the second is a location field specifically for where the OpenAI resource should be created.
 
 - On completion, it automatically invokes a `postprovision.sh` script, that will be located in the `infra/hooks` folder. This will attempt to log you into Azure. You may see something like this. Just follow the provided instructions to complete the authentication flow.
     ```bash
@@ -239,61 +252,60 @@ Visit the [azd reference](https://learn.microsoft.com/azure/developer/azure-deve
 - Once logged in, the script will do the following for you:
     - Create the `.azure/<env>/config.json` in the local device
     - Populate `.azure/<env>/.env` with required environment variables
+    - Populate your data (in Azure AI Search, Azure CosmosDB)
+    - Create relevant Connections (for prompt flow)
+    - Upload your prompt flow to Azure (for deployment)
 
-That's it! You should now be ready to continue; start by completing the verification steps below and taking any troubleshooting actions identified.
+That's it! You should now be ready to continue the process as before. Note that this is a new process so there may be some issues to iron out. Start by completing the verification steps below and taking any troubleshooting actions identified.
 
 #### 2.2.4 Verify Provisioning
 
-The script will have **set up a dedicated resource group** with the required resources described earlier in the architecture section, including:
+The script should **set up a dedicated resource group** with the following resources:
 
- - Cosmos DB
- - Azure OpenAI
- - Search service (Azure AI Search) resource\
- - An Azure Container Apps (ACA) resource hosting the REST endpoint
+ - **Azure AI services** resource
+ - **Azure Machine Learning workspace** (Azure AI Project) resource
+ - **Search service** (Azure AI Search) resource
+ - **Bing Search** (Bing Search) resource
 
 The script will set up an **Azure AI Studio** project with the following model deployments created by default, in a relevant region that supports them. _Your Azure subscription must be [enabled for Azure OpenAI access](https://learn.microsoft.com/azure/ai-services/openai/overview#how-do-i-get-access-to-azure-openai)_.
  - gpt-3.5-turbo
  - text-embeddings-ada-002
+ - gpt-4
 
 The Azure AI Search resource will have **Semantic Ranker** enabled for this project, which requires the use of a paid tier of that service. It may also be created in a different region, based on [availability of that feature](https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?products=search).
 
-### 2.3 Configure endpoints in the .NET Application
+### 2.3 Add endpoints to the .NET Application
 
-The project now needs to have access to Azure, to do this, open the ``.\src\ContosoChatAPI\ContosoChatAPI\appsettings.json`` file in your project and change the following variables. You can use the ``\.azure\<env-name>\.env`` file, generated during Azure resource provisioning, to find the correct configuration values to use.
+The project now needs to have access to Azure, to do this, go to ``.\src\ContosoChatAPI\ContosoChatAPI\appsettings.json`` and change the following variables. Use the ``\.azure\<env-name>\.env`` for your endpoints.
 
-| .env variable                | appsettings.json value |
-|------------------------------|--------------------------------------------|
-| APPINSIGHTS_CONNECTIONSTRING | ``ApplicationInsights -> ConnectionString``|
-| AZURE_OPENAI_ENDPOINT        | ``OpenAi -> Endpoint``|
-| CosmosDb__Endpoint           | ``CosmosDb -> Endpoint`` |
-| AzureAISearch__Endpoint      | ``AzureAISearch -> Endpoint`` |
+- .env -> appsettings.json
+- APPINSIGHTS_CONNECTIONSTRING -> ``ApplicationInsights -> ConnectionString``
+- AZURE_OPENAI_ENDPOINT`-> ``OpenAi -> Endpoint``
+- CosmosDb__Endpoint -> ``CosmosDb -> Endpoint``
+- AzureAISearch__Endpoint -> ``AzureAISearch -> Endpoint``
 
 ## 3. Running the application
 
-In Visual Studio Code, start debugging (e.g. by pressing the F5 key) - when prompted, select C# as your language, and then choose the ContosoChatAPI project.
+First, you will need to navegate in the console to our folder in ContosoChat, use the following  ``cd .\src\ContosoChatAPI\``.
 
-**If you're using GitHub Codespaces**, click to confirm when you're prompted to open a URL in the browser. Once it's open, you'll see an error - change the URL by adding "/swagger/" to the end of it and load the page.
+After this, we need to restore our dotNet packages to build our solution, we can use ``dotnet restore``. To build our ``.dll`` from solution, use ``dotnet build``, it will report two dlls being created, the test and the main one.
 
-**If you're not using GitHub Codespaces**, the browser will open to the correct URL.
+ To execute our solution use ``dotnet run --project .\ContosoChatAPI\ContosoChatAPI.csproj``. This will run our solution, which will make available our API to test and connect from our data collection located in ``chat.json``.
+
+To the Swagger endpoint, use the application on ``http://localhost:5282/swagger/``. For codespaces, take the URL and add the `/swagger/` to it.
 
 ## 3.1 Using the aplication with Swagger
 
-Your browser should now be open to the Swagger UI (used for documenting and testing the Web API):
+When opening the page to Swagger, you may look on the following page.
 
-![Swagger Web Page](./data/images/swagger-contoso-chat.png)
+![Swagger Web Page](../data/images/swagger-contoso-chat.png)
 
-Click on the /ContosoChat API, then click the `Try it out` button and provide the following parameters:
+Click on `Try it out`, then, test with the following parameters:
 
     - customerId: `3`
-    - question: `What can you tell me about jackets?`
+    - question: `Can what can you tell me about the jackets?`
 
-Click the `Execute` button to send the question to the chat agent.
-* An HTTP POST request will then be sent to the backend Web API.
-* Semantic Kernel will then be used to query for additional context data from CosmosDB.
-* A prompt, defined using the Prompty format, will be created combining the customerId, question, and context data.
-* This prompt will then be sent to the Azure OpenAI service which will send back an answer to the chat.
-
-A response will then be shown in the Swagger UI, with content similar to:
+After seding the information, will send with the RAG pattern to Azure, which sends the client information, the question and some store data. Getting back a answer to the chat. An example of it, can be: 
 
 ```
 Answer: Sure, Michael! Let me tell you about our jackets. One of our popular jackets is the Summit Breeze Jacket (catalog id 23). It's a lightweight and windproof jacket with a water-resistant fabric. It's perfect for outdoor adventures and comes in a sleek black color. 🌬️🧥
@@ -303,26 +315,22 @@ If you're interested in jackets, you might also like the TrailWalker Hiking Shoe
 Let me know if you need any more information!
 ```
 
-## 4. Calling the API deployed in Azure
 
-During Azure resource provisioning, an Azure Container App was deployed with the REST endpoint we just tested locally using Swagger. To call and test the deployed endpoint directly:
-
-- Get the endpoint URL from the `.env` file that was created during provisioning.
-  - Open the ``src\ContosoChatAPI\ContosoChatAPI\appsettings.json`` file in your project.
-  - Copy the value of the `SERVICE_ACA_URI` variable.
-- POST to the api endpoint with the `customerId` and `question`, using a tool like curl:
+## 4. Hit the Deployed API
+- Navigate to Azure portal and get the endpoint from Azure Container Apps deployment
+- Post to the api endpoint with the `customerId` and `question`
 
 ```
 curl -v --header "Content-Type: application/json" \
   --request POST \
   --data '{"customerId":"3","question":"Tell me about your jackets?"}' \
-  http://<service-aca-uri>/ContosoChat
+  http://<aca-url>/ContosoChat
 ```
 
 ## Costs
 You can estimate the cost of this project's architecture with [Azure's pricing calculator](https://azure.microsoft.com/pricing/calculator/)
 
-- Azure OpenAI - Standard tier, GPT-35-turbo and Ada models.  [See Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/)
+- Azure OpenAI - Standard tier, GPT-4, GPT-35-turbo and Ada models.  [See Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/)
 - Azure AI Search - Basic tier, Semantic Ranker enabled [See Pricing](https://azure.microsoft.com/en-us/pricing/details/search/)
 - Azure Cosmos DB for NoSQL - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/cosmos-db/autoscale-provisioned/#pricing)
 - Azure Monitor - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/monitor/)
@@ -345,15 +353,7 @@ To ensure best security practices in your repo, we recommend anyone creating sol
 
 ## Troubleshooting
 
-Have questions or issues to report? Please [open a new issue](https://github.com/Azure-Samples/contoso-chat-csharp-prompty/issues) after first verifying that the same question or issue has not already been reported. If your issue has already been reported, please add any additional comments you may have, to the existing issue.
-
-### Verifying permissions
-
-Depending on your environment, you may see permissions errors during the provisioning of Azure resources. Here are some common permissions you will need enabled for your account:
-
-* Your Azure account must have `Microsoft.Authorization/roleAssignments/write` permissions, such as [Role Based Access Control Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview), [User Access Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#user-access-administrator), or [Owner](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#owner). If you don't have subscription-level permissions, you must be granted [RBAC](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview) for an existing resource group and [deploy to that existing group](docs/deploy_existing.md#resource-group).
-* Your Azure account also needs `Microsoft.Resources/deployments/write` permissions on the subscription level.
-
+Have questions or issues to report? Please [open a new issue](https://github.com/Azure-Samples/contoso-chat-csharp-prompty/issues) after first verifying that the same question or issue has not already been reported. In the latter case, please add any additional comments you may have, to the existing issue.
 
 
 ## Contributing
@@ -367,7 +367,6 @@ a CLA and decorate the PR appropriately (e.g., status check, comment). Simply fo
 provided by the bot. You will only need to do this once across all repos using our CLA.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
@@ -376,7 +375,5 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
 trademarks or logos is subject to and must follow 
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-
 Any use of third-party trademarks or logos are subject to those third-party's policies.
