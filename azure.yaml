@@ -2,7 +2,19 @@ name: contoso-chat-csharp-prompty
 metadata:
   template: contoso-chat-csharp-prompty@0.0.1
 services:
-  ContosoChatAPI:
-    project: ./src/ContosoChatAPI
-    image: "${AZURE_CONTAINER_REGISTRY_NAME}.azurecr.io/contosochatapi:latest"
+  api:
     host: containerapp
+    language: csharp
+    project: src/ContosoChatAPI/ContosoChatAPI
+hooks:
+  postprovision:
+    posix:
+      shell: sh
+      continueOnError: false
+      interactive: true
+      run: infra/hooks/postprovision.sh
+    windows:
+      shell: pwsh
+      continueOnError: false
+      interactive: true
+      run: infra/hooks/postprovision.ps1
