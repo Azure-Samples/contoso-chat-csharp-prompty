@@ -2,7 +2,7 @@
 name: Contoso Chat Retail with .NET and Semantic Kernel
 description: A front store with AI integration and chat features in the Cloud
 languages:
-- DotNet
+- csharp
 - bicep
 - azdeveloper
 products:
