@@ -5,7 +5,6 @@ languages:
 - DotNet
 - bicep
 - azdeveloper
-- Prompty
 products:
 - azure-openai
 - azure-cognitive-search
