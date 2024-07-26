@@ -6,14 +6,3 @@ services:
     host: containerapp
     language: csharp
     project: src/ContosoChatAPI/ContosoChatAPI
-hooks:
-  postprovision:
-    posix:
-      shell: sh
-      continueOnError: false
-      interactive: true
-    windows:
-      shell: pwsh
-      continueOnError: false
-      interactive: true
-      run: infra/hooks/postprovision.ps1
