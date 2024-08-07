@@ -19,8 +19,7 @@ This sample demonstrates how to build, evaluate, and deploy, a retail copilot ap
     - [Create Azure Resources](#2-create-azure-resources)
     - [Running the Application](#3-running-the-application)
 - [Calling the API deployed in Azure](#4-hit-the-deployed-api)
-- [Costs](#costs)
-- [Security Guidelines](#security-guidelines)
+- [Guidance](#guidance)
 - [Resources](#resources)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -52,7 +51,7 @@ By exploring and deploying this sample, you will learn to:
 4. Provision & deploy the solution using the [**Azure Developer CLI**](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview).
 5. Support **Responsible AI** practices with evaluation & content safety.
 
-# Features
+## Features
 
 The project comes with:
 
@@ -71,9 +70,9 @@ The Contoso Chat application implements a _retrieval augmented generation_ patte
 
 ![Architecture Diagram](data/images/architecture-diagram-contoso-dotnet.png)
 
-# Getting Started
+## Getting Started
 
-## Pre-requisites
+### Pre-requisites
 
 - **Azure Subscription** - [Signup for a free account here.](https://azure.microsoft.com/free/)
 - **GitHub Account** - [Signup for a free account here.](https://github.com/signup)
@@ -319,25 +318,27 @@ curl -v --header "Content-Type: application/json" \
   http://<service-aca-uri>/ContosoChat
 ```
 
-## Costs
+## Guidance
+
+### Region Availability
+
+This template uses [MODEL 1] and [MODEL 2] which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly
+  * We recommend using [SUGGESTED REGION]
+
+### Costs
+
 You can estimate the cost of this project's architecture with [Azure's pricing calculator](https://azure.microsoft.com/pricing/calculator/)
 
-- Azure OpenAI - Standard tier, GPT-35-turbo and Ada models.  [See Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/)
-- Azure AI Search - Basic tier, Semantic Ranker enabled [See Pricing](https://azure.microsoft.com/en-us/pricing/details/search/)
-- Azure Cosmos DB for NoSQL - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/cosmos-db/autoscale-provisioned/#pricing)
-- Azure Monitor - Serverless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/monitor/)
-- Azure Container Apps - Severless, Free Tier [See Pricing](https://azure.microsoft.com/en-us/pricing/details/container-apps/)
+* [Azure Product] - [plan type] [link to pricing for product](https://azure.microsoft.com/pricing/)
 
+### Security
 
-# Security Guidelines
+> [!NOTE]
+> When implementing this template please specify whether the template uses Managed Identity or Key Vault
 
-This template uses [Managed Identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview) or Key Vault to eliminate the need for developers to manage credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials.
+This template has either [Managed Identity](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview) or Key Vault built in to eliminate the need for developers to manage these credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials. Additionally, we have added a [GitHub Action tool](https://github.com/microsoft/security-devops-action) that scans the infrastructure-as-code files and generates a report containing any detected issues. To ensure best practices in your repo we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
 
-Additionally, we have added a [GitHub Action tool](https://github.com/microsoft/security-devops-action) that scans the infrastructure-as-code files and generates a report containing any detected issues. 
-
-To ensure best security practices in your repo, we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
-
-# Resources
+## Resources
 
 - [Take a look on more .NET AI Samples.](https://github.com/dotnet/ai-samples/)
 - [Learn more .NET AI with Microsoft Learn](https://learn.microsoft.com/pt-pt/dotnet/azure/)
@@ -353,8 +354,6 @@ Depending on your environment, you may see permissions errors during the provisi
 
 * Your Azure account must have `Microsoft.Authorization/roleAssignments/write` permissions, such as [Role Based Access Control Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview), [User Access Administrator](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#user-access-administrator), or [Owner](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#owner). If you don't have subscription-level permissions, you must be granted [RBAC](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#role-based-access-control-administrator-preview) for an existing resource group and [deploy to that existing group](docs/deploy_existing.md#resource-group).
 * Your Azure account also needs `Microsoft.Resources/deployments/write` permissions on the subscription level.
-
-
 
 ## Contributing
 
