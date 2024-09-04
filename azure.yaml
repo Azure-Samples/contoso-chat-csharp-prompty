@@ -1,6 +1,6 @@
-name: chat-rag-openai-csharp-prompty
+name: contoso-chat-csharp-prompty
 metadata:
-  template: chat-rag-openai-csharp-prompty@0.0.1
+  template: contoso-chat-csharp-prompty@0.0.1
 hooks:
   postprovision:
     posix:
