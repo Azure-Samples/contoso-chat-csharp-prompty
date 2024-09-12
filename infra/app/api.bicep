@@ -6,7 +6,7 @@ param identityName string
 param identityId string
 param containerAppsEnvironmentName string
 param containerRegistryName string
-param serviceName string = 'aca'
+param serviceName string = 'api'
 param openAiDeploymentName string
 param openAiEndpoint string
 param openAiApiVersion string
@@ -81,10 +81,10 @@ module app '../core/host/container-app-upsert.bicep' = {
       }
 
     ]
-    targetPort: 50505
+    targetPort: 8080
   }
 }
 
-output SERVICE_ACA_NAME string = app.outputs.name
-output SERVICE_ACA_URI string = app.outputs.uri
-output SERVICE_ACA_IMAGE_NAME string = app.outputs.imageName
+output SERVICE_API_NAME string = app.outputs.name
+output SERVICE_API_URI string = app.outputs.uri
+output SERVICE_API_IMAGE_NAME string = app.outputs.imageName

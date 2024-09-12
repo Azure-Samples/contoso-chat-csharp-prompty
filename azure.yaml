@@ -1,17 +1,8 @@
-name: chat-rag-openai-csharp-prompty
+name: contoso-chat-csharp-prompty
 metadata:
-  template: chat-rag-openai-csharp-prompty@0.0.1
-hooks:
-  postprovision:
-    posix:
-      shell: sh
-      continueOnError: false
-      interactive: true
-      run: infra/hooks/postprovision.sh
-    windows:
-      shell: pwsh
-      continueOnError: false
-      interactive: true
-      run: infra/hooks/postprovision.ps1
-infra:
-    provider: "bicep"
+  template: contoso-chat-csharp-prompty@0.0.1
+services:
+  api:
+    host: containerapp
+    language: csharp
+    project: src/ContosoChatAPI/ContosoChatAPI
