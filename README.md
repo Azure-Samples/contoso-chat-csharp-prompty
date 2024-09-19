@@ -77,7 +77,7 @@ The Contoso Chat application implements a _retrieval augmented generation_ patte
 
 - **Azure Subscription** - [Signup for a free account here.](https://azure.microsoft.com/free/)
 - **GitHub Account** - [Signup for a free account here.](https://github.com/signup)
-- **Access to Azure Open AI Services** - [Apply for access here.](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access)
+- **Access to Azure OpenAI Services** - [Apply for access here.](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access)
   - Ability to deploy these models - `gpt-35-turbo`, `text-embeddings-ada-002`
 - **Ability to provision Azure AI Search (Paid)** - Required for Semantic Ranker
 
