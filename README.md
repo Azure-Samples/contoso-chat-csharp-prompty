@@ -25,8 +25,8 @@ This sample demonstrates how to build, evaluate, and deploy, a retail copilot ap
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
-[![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
-[![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/chat-rag-openai-csharp-prompty) 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/contoso-chat-csharp-prompty)
+[![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/contoso-chat-csharp-prompty) 
 
 # What is this sample?
 
@@ -117,7 +117,7 @@ The third approach will require you to manually update or maintain your local en
 1. Click the green Code button on this repository.
 1. Select the ``Codespaces`` tab and click ``Create codespace...`` 
 
-    - You can also click this button: [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=brightgreen&logo=github)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=599293758&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=WestUs2)
+    - You can also click this button: [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/contoso-chat-csharp-prompty)
 
 1. This should open a new browser tab with a Codespaces container setup process running. 
 1. On completion, this will launch a Visual Studio Code editor in the browser, with all relevant dependencies already installed in the running development container beneath. 
@@ -185,19 +185,15 @@ We setup our development ennvironment in the previous step. In this step, we'll 
 
 Start by connecting your Visual Studio Code environment to your Azure account:
 
-1. Open the terminal in VS Code and use command `az login`. 
-2. Complete the authentication flow. 
-
-**If you are running within Codespaces, use these instructions to login instead:**
- 1. Open the terminal in VS Code and use command `az login --use-device-code`
- 2. The console message will give you an alphanumeric code
- 3. Navigate to _https://microsoft.com/devicelogin_ in a new tab
- 4. Enter the code from step 2 and complete the flow.
-
-In either case, verify that the console shows a message indicating a successful authentication. Set your subscription in your enviroment with:
-
-``az account set -s <SUB_ID>``
-
+- Open the terminal in VS Code and start the authentication flow from a terminal:
+    ```bash
+    azd auth login
+    ```
+- This should activate a Device Code authentication flow as shown below. Just follow the instructions and complete the auth flow till you get the `Logged in on Azure` message indicating success.
+    ```bash
+    Start by copying the next code: <code-here>
+    Then press enter and continue to log in from your browser...
+    ```
 
 **Congratulations! Your VS Code session is now connected to your Azure subscription!**
 
@@ -211,18 +207,7 @@ Visit the [azd reference](https://learn.microsoft.com/azure/developer/azure-deve
 - If you used a pre-built dev container environment (e.g., GitHub Codespaces or Docker Desktop) the tool is pre-installed for you.
 - Verify that the tool is installed by typing ```azd version``` in a terminal.
 
-#### 2.2.2 Authenticate with Azure
-- Start the authentication flow from a terminal:
-    ```bash
-    azd auth login
-    ```
-- This should activate a Device Code authentication flow as shown below. Just follow the instructions and complete the auth flow till you get the `Logged in on Azure` message indicating success.
-    ```bash
-    Start by copying the next code: <code-here>
-    Then press enter and continue to log in from your browser...
-    ```
-
-#### 2.2.3 Provision and Deploy 
+#### 2.2.2 Provision and Deploy 
 
 - Run the following command to provision all resources. Note: This will take awhile to complete, usually around 10-15 minutes.
     ```bash
@@ -232,17 +217,13 @@ Visit the [azd reference](https://learn.microsoft.com/azure/developer/azure-deve
   - At this time, we recommend using Sweden Central or East US 2 regions for OpenAI resources.
   - For Azure AI Search we recommend using the East US region, due to limited regional availability currently.
 
-- On completion, it automatically invokes a `postprovision.sh` script, that will be located in the `infra/hooks` folder. This will attempt to log you into Azure. You may see something like this. Just follow the provided instructions to complete the authentication flow.
-    ```bash
-    No Azure user signed in. Please login.
-    ```
 - Once logged in, the script will do the following for you:
     - Create the `.azure/<env>/config.json` in the local device
     - Populate `.azure/<env>/.env` with required environment variables
 
 That's it! You should now be ready to continue; start by completing the verification steps below and taking any troubleshooting actions identified.
 
-#### 2.2.4 Verify Provisioning
+#### 2.2.3 Verify Provisioning
 
 The script will have **set up a dedicated resource group** with the required resources described earlier in the architecture section, including:
 
@@ -340,7 +321,7 @@ To ensure best security practices in your repo, we recommend anyone creating sol
 # Resources
 
 - [Take a look on more .NET AI Samples.](https://github.com/dotnet/ai-samples/)
-- [Learn more .NET AI with Microsoft Learn](https://learn.microsoft.com/pt-pt/dotnet/azure/)
+- [Learn more about .NET AI on Microsoft Learn](https://learn.microsoft.com/dotnet/ai/)
 - [Learn Azure, deploying in GitHub!](https://github.com/Azure-Samples)
 
 ## Troubleshooting

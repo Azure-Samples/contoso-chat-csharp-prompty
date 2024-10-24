@@ -10,7 +10,8 @@ using Microsoft.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -59,7 +60,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.MapControllers();
+
+app.MapPost("/api/ContosoChat", async (string customerId, string question, ChatService chatService, ILogger<Program> logger) =>
+{
+    string result = await chatService.GetResponseAsync(customerId, question);
+    logger.LogInformation("Result: {Result}", result);
+    return Results.Ok(result);
+});
 
 app.Run();
 
